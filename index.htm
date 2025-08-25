@@ -2050,6 +2050,25 @@
             )
             .join("");
         }
+        calculateTotal();
+      }
+
+      function updateQuantity(index, change) {
+        currentOrder[index].quantity += change;
+        if (currentOrder[index].quantity <= 0) {
+          removeFromOrder(index);
+        } else {
+          renderOrderList();
+        }
+      }
+
+      function removeFromOrder(index) {
+        const item = currentOrder[index];
+        currentOrder.splice(index, 1);
+        renderOrderList();
+        showToast(`${item.name} dihapus dari pesanan`, "info");
+      }
+
       // Modifikasi fungsi calculateTotal
       function calculateTotal() {
         const subtotal = currentOrder.reduce(
