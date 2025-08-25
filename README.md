@@ -22,7 +22,7 @@ Sistem pemesanan online untuk Warung Kopi Bengkel dengan fitur pembayaran QRIS d
 
 ## 🚀 Demo Live
 
-[https://username.github.io/warkobeng](https://username.github.io/warkobeng)
+[https://iwaygh.github.io/warkobeng-cashier](https://iwaygh.github.io/warkobeng-cashier)
 
 ## 💻 Teknologi
 
@@ -124,6 +124,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 📞 Kontak
 
-Nama Anda - [@username](https://github.com/username) - email@example.com
+Iway - [@iwaygh](https://github.com/iwaygh) - iway.channel2020@gmail.com
 
-Project Link: [https://github.com/username/warkobeng](https://github.com/username/warkobeng)
+Project Link: [[https://github.com/username/warkobeng](https://iwaygh.github.io/WarKoBeng-Cashier/)]([https://github.com/username/warkobeng](https://iwaygh.github.io/WarKoBeng-Cashier/))
