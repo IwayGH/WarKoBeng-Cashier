@@ -1,0 +1,3368 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WarKoBeng - Warung Kopi Bengkel</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>// Cek apakah aplikasi berjalan online
+const isOnline = window.location.hostname !== 'localhost' && 
+                 window.location.hostname !== '127.0.0.1';
+
+// Tampilkan notasi untuk pengguna online
+if (isOnline) {
+  // Tambahkan banner informasi
+  const onlineBanner = document.createElement('div');
+  onlineBanner.className = 'bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4';
+  onlineBanner.innerHTML = `
+    <div class="flex">
+      <div class="py-1">
+        <i class="fas fa-info-circle mr-2"></i>
+      </div>
+      <div>
+        <p class="font-bold">Mode Online</p>
+        <p class="text-sm">Data tersimpan di browser lokal. Hapus cache browser akan menghapus semua data.</p>
+      </div>
+    </div>
+  `;
+  
+  // Sisipkan setelah header
+  const header = document.querySelector('.sticky-header');
+  if (header) {
+    header.parentNode.insertBefore(onlineBanner, header.nextSibling);
+  }
+}</script>
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #8b4513; /* Saddle Brown - Coffee Brown */
+        --primary-dark: #6b3410; /* Darker Coffee Brown */
+        --secondary: #228b22; /* Forest Green - Natural Green */
+        --accent: #d2691e; /* Chocolate - Light Coffee */
+        --light: #f5e6d3; /* Coffee Cream */
+        --dark: #3e2723; /* Dark Coffee */
+        --warm: #cd853f; /* Peru - Warm Brown */
+        --cream: #fff8dc; /* Cornsilk - Cream */
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #f5f1eb 0%, #d7ccc8 100%);
+        min-height: 100vh;
+        transition: background 0.3s ease;
+        color: #3e2723; /* Dark text for light mode */
+      }
+      body.dark-mode {
+        background: linear-gradient(135deg, #1a0f0a 0%, #2d1810 100%);
+        color: #f5e6d3; /* Light text for dark mode */
+      }
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(139, 69, 19, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(62, 39, 35, 0.15);
+        color: #3e2723; /* Dark text for light mode */
+      }
+      body.dark-mode .glass-effect {
+        background: rgba(30, 20, 15, 0.9);
+        border: 1px solid rgba(245, 230, 211, 0.15);
+        color: #f5e6d3; /* Light text for dark mode */
+      }
+      .menu-card {
+        transition: all 0.3s ease;
+        transform-style: preserve-3d;
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        color: #3e2723; /* Dark text for light mode */
+      }
+      body.dark-mode .menu-card {
+        background: #2d1810;
+        color: #f5e6d3; /* Light text for dark mode */
+      }
+      .menu-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(139, 69, 19, 0.2);
+      }
+      .tab-button {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border-bottom: 3px solid transparent;
+        color: #8b4513; /* Amber text for light mode */
+      }
+      body.dark-mode .tab-button {
+        color: #d7ccc8; /* Light amber text for dark mode */
+      }
+      .tab-button.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+        font-weight: 600;
+      }
+      body.dark-mode .tab-button.active {
+        color: #f5e6d3; /* Lighter text for active tab in dark mode */
+      }
+      .tab-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(139, 69, 19, 0.1),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+      .tab-button:hover::before {
+        left: 100%;
+      }
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        color: white;
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(139, 69, 19, 0.3);
+      }
+      .btn-primary::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+      }
+      .btn-primary:focus:not(:active)::after {
+        animation: ripple 1s ease-out;
+      }
+      @keyframes ripple {
+        0% {
+          transform: scale(0, 0);
+          opacity: 0.5;
+        }
+        100% {
+          transform: scale(20, 20);
+          opacity: 0;
+        }
+      }
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        z-index: 9999;
+      }
+      .toast.show {
+        transform: translateX(0);
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(30, 20, 15, 0.8);
+        backdrop-filter: blur(5px);
+        animation: fadeIn 0.3s ease;
+      }
+      .modal.show {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .modal-content {
+        animation: slideIn 0.3s ease;
+        background: white;
+        color: #3e2723; /* Dark text for light mode */
+      }
+      body.dark-mode .modal-content {
+        background: #2d1810;
+        color: #f5e6d3; /* Light text for dark mode */
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .sticky-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(245, 241, 235, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+        color: #3e2723; /* Dark text for light mode */
+        box-shadow: 0 4px 20px rgba(139, 69, 19, 0.1);
+      }
+      body.dark-mode .sticky-header {
+        background: linear-gradient(
+          135deg,
+          rgba(30, 20, 15, 0.98) 0%,
+          rgba(45, 24, 16, 0.95) 100%
+        );
+        border-bottom: 1px solid rgba(245, 230, 211, 0.2);
+        color: #f5e6d3; /* Light text for dark mode */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      }
+      .search-box {
+        position: relative;
+      }
+      .search-box input {
+        padding-left: 2.5rem;
+        border-color: var(--warm);
+        background: white;
+        color: #3e2723; /* Dark text for light mode */
+      }
+      body.dark-mode .search-box input {
+        background: #3e2723;
+        color: #f5e6d3; /* Light text for dark mode */
+        border-color: #5d4037;
+      }
+      .search-box input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+      }
+      .search-box i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--warm);
+      }
+      body.dark-mode .search-box i {
+        color: #d7ccc8; /* Lighter icon for dark mode */
+      }
+      .order-item {
+        animation: slideInLeft 0.3s ease;
+      }
+      @keyframes slideInLeft {
+        from {
+          transform: translateX(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease;
+      }
+      .hover-scale {
+        transition: transform 0.2s ease;
+      }
+      .hover-scale:hover {
+        transform: scale(1.05);
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .badge-success {
+        background-color: rgba(34, 139, 34, 0.1);
+        color: var(--secondary);
+      }
+      body.dark-mode .badge-success {
+        background-color: rgba(34, 139, 34, 0.2);
+        color: #4caf50; /* Brighter green for dark mode */
+      }
+      .badge-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+      }
+      body.dark-mode .badge-danger {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #ff6b6b; /* Brighter red for dark mode */
+      }
+      .stats-card {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--warm) 100%
+        );
+        color: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(139, 69, 19, 0.2);
+        transition: transform 0.3s ease;
+      }
+      .stats-card:hover {
+        transform: translateY(-5px);
+      }
+      .dark-mode-toggle {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+        transition: all 0.3s ease;
+        z-index: 100;
+      }
+      .dark-mode-toggle:hover {
+        transform: scale(1.1);
+      }
+      .brand-title {
+        font-family: "Playfair Display", serif;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--accent) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      body.dark-mode .brand-title {
+        background: linear-gradient(135deg, #f5e6d3 0%, #d7ccc8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .coffee-bean-bg {
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 10 C30 10, 15 30, 15 50 C15 70, 30 90, 50 90 C70 90, 85 70, 85 50 C85 30, 70 10, 50 10 Z' fill='%238B4513' opacity='0.05'/%3E%3C/svg%3E");
+        background-repeat: repeat;
+      }
+      body.dark-mode .coffee-bean-bg {
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 10 C30 10, 15 30, 15 50 C15 70, 30 90, 50 90 C70 90, 85 70, 85 50 C85 30, 70 10, 50 10 Z' fill='%23f5e6d3' opacity='0.03'/%3E%3C/svg%3E");
+      }
+      .qr-upload-area,
+      .logo-upload-area,
+      .menu-image-upload-area {
+        border: 2px dashed var(--primary);
+        border-radius: 0.5rem;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.5);
+        color: #3e2723; /* Dark text for light mode */
+      }
+      body.dark-mode .qr-upload-area,
+      body.dark-mode .logo-upload-area,
+      body.dark-mode .menu-image-upload-area {
+        background: rgba(30, 20, 15, 0.5);
+        color: #f5e6d3; /* Light text for dark mode */
+      }
+      .qr-upload-area:hover,
+      .logo-upload-area:hover,
+      .menu-image-upload-area:hover {
+        background-color: rgba(139, 69, 19, 0.05);
+      }
+      body.dark-mode .qr-upload-area:hover,
+      body.dark-mode .logo-upload-area:hover,
+      body.dark-mode .menu-image-upload-area:hover {
+        background-color: rgba(245, 230, 211, 0.1);
+      }
+      .qr-upload-area.dragover,
+      .logo-upload-area.dragover,
+      .menu-image-upload-area.dragover {
+        background-color: rgba(139, 69, 19, 0.1);
+        border-color: var(--accent);
+      }
+      body.dark-mode .qr-upload-area.dragover,
+      body.dark-mode .logo-upload-area.dragover,
+      body.dark-mode .menu-image-upload-area.dragover {
+        background-color: rgba(245, 230, 211, 0.15);
+      }
+      /* Enhanced text visibility for dark mode */
+      body.dark-mode h1,
+      body.dark-mode h2,
+      body.dark-mode h3,
+      body.dark-mode h4,
+      body.dark-mode h5,
+      body.dark-mode h6 {
+        color: #f5e6d3 !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+      body.dark-mode p,
+      body.dark-mode span,
+      body.dark-mode label,
+      body.dark-mode td,
+      body.dark-mode th {
+        color: #e0d5c7 !important;
+      }
+      body.dark-mode input,
+      body.dark-mode select,
+      body.dark-mode textarea {
+        background-color: #3e2723 !important;
+        color: #f5e6d3 !important;
+        border-color: #5d4037 !important;
+      }
+      body.dark-mode input::placeholder {
+        color: #a1887f !important;
+      }
+      body.dark-mode .bg-white {
+        background-color: #2d1810 !important;
+      }
+      body.dark-mode .bg-amber-50 {
+        background-color: #3e2723 !important;
+      }
+      body.dark-mode .bg-red-50 {
+        background-color: #3e2723 !important;
+      }
+      body.dark-mode .bg-green-50 {
+        background-color: #3e2723 !important;
+      }
+      body.dark-mode .text-amber-900 {
+        color: #f5e6d3 !important;
+      }
+      body.dark-mode .text-amber-800 {
+        color: #e0d5c7 !important;
+      }
+      body.dark-mode .text-amber-700 {
+        color: #d7ccc8 !important;
+      }
+      body.dark-mode .text-amber-600 {
+        color: #bcaaa4 !important;
+      }
+      body.dark-mode .text-red-600 {
+        color: #ff6b6b !important;
+      }
+      body.dark-mode .text-green-600 {
+        color: #4caf50 !important;
+      }
+      body.dark-mode .border-amber-100 {
+        border-color: #5d4037 !important;
+      }
+      body.dark-mode .border-amber-200 {
+        border-color: #6d4c41 !important;
+      }
+      body.dark-mode .border-red-200 {
+        border-color: #6d4c41 !important;
+      }
+      body.dark-mode .border-green-200 {
+        border-color: #6d4c41 !important;
+      }
+      body.dark-mode .divide-amber-100 > :not([hidden]) ~ :not([hidden]) {
+        border-color: #5d4037 !important;
+      }
+      /* Header specific styles for dark mode */
+      body.dark-mode .header-subtitle {
+        color: #d7ccc8 !important;
+      }
+      body.dark-mode .header-tagline {
+        color: #bcaaa4 !important;
+      }
+      body.dark-mode .tab-nav-border {
+        border-color: rgba(245, 230, 211, 0.2) !important;
+      }
+      @media (max-width: 768px) {
+        .stats-card {
+          margin-bottom: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="">
+    <!-- Coffee Bean Background Pattern -->
+    <div
+      class="coffee-bean-bg fixed inset-0 opacity-20 pointer-events-none"
+    ></div>
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+      <i class="fas fa-moon" id="darkModeIcon"></i>
+    </div>
+    <!-- Toast Notification -->
+    <div
+      id="toast"
+      class="toast glass-effect rounded-lg p-4 shadow-lg max-w-sm"
+    >
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <i
+            class="fas fa-exclamation-circle text-red-500 text-xl"
+            id="toastIcon"
+          ></i>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-medium text-gray-900" id="toastMessage">
+            Unggah QR pembayaran terlebih dahulu
+          </p>
+        </div>
+        <div class="ml-auto pl-3">
+          <button
+            onclick="hideToast()"
+            class="text-gray-400 hover:text-gray-600"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="container mx-auto px-4 py-8 max-w-6xl relative z-10">
+      <!-- Sticky Header -->
+      <div class="sticky-header rounded-2xl mb-8 p-6 glass-effect">
+        <header class="text-center">
+          <div class="flex items-center justify-center mb-4">
+            <h1
+              class="text-5xl md:text-6xl font-extrabold brand-title tracking-tight"
+            >
+              WarKoBeng
+            </h1>
+            <img
+              src="https://via.placeholder.com/80"
+              alt="Logo WarKoBeng"
+              id="logoImage"
+              class="ml-4 h-16 w-16 rounded-full hover-scale border-2 border-amber-700"
+            />
+            <!-- Logo upload button (only visible in settings mode) -->
+            <button
+              id="logoUploadBtn"
+              onclick="openLogoUploadModal()"
+              class="ml-2 bg-blue-500 hover:bg-blue-600 text-white w-8 h-8 rounded-full transition duration-300"
+              style="display: none"
+              title="Upload Logo"
+            >
+              <i class="fas fa-camera text-sm"></i>
+            </button>
+          </div>
+          <h2 class="text-xl md:text-2xl font-semibold header-subtitle mb-2">
+            Warung Kopi Bengkel
+          </h2>
+          <p class="text-amber-700 italic header-tagline">
+            Tempat Nyaman untuk Kopi dan Obrolan Hangat
+          </p>
+        </header>
+        <!-- Tab Navigation -->
+        <div class="flex flex-wrap justify-center mt-6 border-b tab-nav-border">
+          <button
+            onclick="showTab('menu')"
+            class="tab-button px-4 py-3 font-medium text-amber-800 hover:text-amber-600 focus:outline-none active"
+            data-tab="menu"
+          >
+            <i class="fas fa-coffee mr-2"></i>Menu
+          </button>
+          <button
+            onclick="showTab('order')"
+            class="tab-button px-4 py-3 font-medium text-amber-800 hover:text-amber-600 focus:outline-none"
+            data-tab="order"
+          >
+            <i class="fas fa-shopping-cart mr-2"></i>Pesanan
+          </button>
+          <button
+            onclick="showTab('results')"
+            class="tab-button px-4 py-3 font-medium text-amber-800 hover:text-amber-600 focus:outline-none"
+            data-tab="results"
+          >
+            <i class="fas fa-history mr-2"></i>Riwayat
+          </button>
+          <button
+            onclick="showTab('recap')"
+            class="tab-button px-4 py-3 font-medium text-amber-800 hover:text-amber-600 focus:outline-none"
+            data-tab="recap"
+          >
+            <i class="fas fa-chart-bar mr-2"></i>Rekap
+          </button>
+          <button
+            onclick="showTab('filePesanan')"
+            class="tab-button px-4 py-3 font-medium text-amber-800 hover:text-amber-600 focus:outline-none"
+            data-tab="filePesanan"
+          >
+            <i class="fas fa-file-download mr-2"></i>Unduh
+          </button>
+        </div>
+      </div>
+      <!-- Main Content -->
+      <div class="glass-effect rounded-2xl p-6 md:p-8">
+        <!-- Menu Tab -->
+        <div id="menuTab" class="tab-content">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-amber-900">Menu Kami</h3>
+            <div class="flex space-x-2">
+              <button
+                onclick="openQrManagementModal()"
+                id="manageQrBtn"
+                class="btn-primary px-4 py-2 rounded-lg shadow-md"
+                style="display: none"
+              >
+                <i class="fas fa-qrcode mr-2"></i>Kelola QRIS
+              </button>
+              <button
+                onclick="openChangePasswordModal()"
+                id="changePasswordBtn"
+                class="btn-primary px-4 py-2 rounded-lg shadow-md"
+                style="display: none"
+              >
+                <i class="fas fa-key mr-2"></i>Ganti Password
+              </button>
+              <button
+                id="settingsBtn"
+                onclick="handleSettingsClick()"
+                class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-4 py-2 rounded-lg shadow-md transition duration-300"
+              >
+                <i class="fas fa-cog mr-2"></i>Pengaturan
+              </button>
+            </div>
+          </div>
+          <!-- Search Bar -->
+          <div class="mb-8">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                id="globalSearch"
+                placeholder="Cari menu..."
+                class="w-full p-3 rounded-lg border-2 focus:outline-none focus:ring-2"
+              />
+            </div>
+          </div>
+          <!-- Menu Categories -->
+          <div class="space-y-8">
+            <!-- Minuman Section -->
+            <section class="fade-in">
+              <div class="flex items-center justify-between mb-4">
+                <h4 class="text-xl font-bold text-amber-900 flex items-center">
+                  <i class="fas fa-mug-hot text-amber-700 mr-2"></i>Minuman
+                  Pilihan
+                </h4>
+                <button
+                  onclick="showAddForm('drinks')"
+                  class="add-item-btn btn-primary px-4 py-2 rounded-lg shadow-md"
+                  style="display: none"
+                >
+                  <i class="fas fa-plus mr-2"></i>Tambah
+                </button>
+              </div>
+              <div
+                id="drinksMenu"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                <!-- Menu items will be dynamically generated here -->
+              </div>
+            </section>
+            <!-- Makanan Section -->
+            <section class="fade-in">
+              <div class="flex items-center justify-between mb-4">
+                <h4 class="text-xl font-bold text-amber-900 flex items-center">
+                  <i class="fas fa-utensils text-amber-700 mr-2"></i>Makanan
+                  Pengganjal
+                </h4>
+                <button
+                  onclick="showAddForm('food')"
+                  class="add-item-btn btn-primary px-4 py-2 rounded-lg shadow-md"
+                  style="display: none"
+                >
+                  <i class="fas fa-plus mr-2"></i>Tambah
+                </button>
+              </div>
+              <div
+                id="foodMenu"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                <!-- Menu items will be dynamically generated here -->
+              </div>
+            </section>
+            <!-- Menu Tambahan Section -->
+            <section class="fade-in">
+              <div class="flex items-center justify-between mb-4">
+                <h4 class="text-xl font-bold text-amber-900 flex items-center">
+                  <i class="fas fa-plus-circle text-amber-700 mr-2"></i>Menu
+                  Tambahan
+                </h4>
+                <button
+                  onclick="showAddForm('additional')"
+                  class="add-item-btn btn-primary px-4 py-2 rounded-lg shadow-md"
+                  style="display: none"
+                >
+                  <i class="fas fa-plus mr-2"></i>Tambah
+                </button>
+              </div>
+              <div
+                id="additionalMenu"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                <!-- Menu items will be dynamically generated here -->
+              </div>
+            </section>
+          </div>
+        </div>
+        <!-- Order Tab -->
+        <div id="orderTab" class="tab-content hidden">
+          <h3 class="text-2xl font-bold text-amber-900 mb-6">Daftar Pesanan</h3>
+          <div class="mb-6">
+            <label class="block text-amber-800 text-sm font-bold mb-2"
+              >Nomor Meja</label
+            >
+            <div class="relative">
+              <i
+                class="fas fa-chair absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-600"
+              ></i>
+              <input
+                type="text"
+                id="tableNumber"
+                placeholder="Masukkan nomor meja"
+                class="w-full pl-10 p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+          </div>
+          <div class="overflow-x-auto rounded-lg shadow-md">
+            <table class="min-w-full bg-white">
+              <thead class="bg-amber-700 text-white">
+                <tr>
+                  <th
+                    class="py-3 px-4 text-left text-sm font-semibold rounded-tl-lg"
+                  >
+                    Menu
+                  </th>
+                  <th class="py-3 px-4 text-left text-sm font-semibold">
+                    Jumlah
+                  </th>
+                  <th class="py-3 px-4 text-left text-sm font-semibold">
+                    Harga
+                  </th>
+                  <th class="py-3 px-4 text-left text-sm font-semibold">
+                    Total
+                  </th>
+                  <th
+                    class="py-3 px-4 text-left text-sm font-semibold rounded-tr-lg"
+                  >
+                    Aksi
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="orderList" class="divide-y divide-amber-100">
+                <tr>
+                  <td colspan="5" class="text-center py-8 text-amber-600">
+                    <i class="fas fa-shopping-cart text-4xl mb-2"></i>
+                    <p>Belum ada pesanan</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-8 p-6 bg-amber-50 rounded-lg">
+            <div class="space-y-2 text-right">
+              <p class="text-lg">
+                Subtotal:
+                <span id="subtotal" class="font-bold text-amber-900">Rp 0</span>
+              </p>
+              <p class="text-lg">
+                Pajak (10%):
+                <span id="tax" class="font-bold text-amber-900">Rp 0</span>
+              </p>
+              <p class="text-2xl font-extrabold mt-4">
+                Total: <span id="grandTotal" class="text-amber-700">Rp 0</span>
+              </p>
+            </div>
+            <div class="flex justify-end space-x-4 mt-6">
+              <button
+                onclick="clearOrder()"
+                id="clearOrderBtn"
+                class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg shadow-md transition duration-300"
+                style="display: none"
+              >
+                <i class="fas fa-trash mr-2"></i>Bersihkan
+              </button>
+              <button
+                onclick="completeOrder()"
+                class="btn-primary px-6 py-3 rounded-lg shadow-md"
+              >
+                <i class="fas fa-check mr-2"></i>Selesai
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Results Tab -->
+        <div id="resultsTab" class="tab-content hidden">
+          <h3 class="text-2xl font-bold text-amber-900 mb-6">
+            Riwayat Pesanan
+          </h3>
+          <div
+            id="completedOrders"
+            class="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
+            <!-- Orders will be dynamically generated here -->
+          </div>
+        </div>
+        <!-- Recap Tab -->
+        <div id="recapTab" class="tab-content hidden">
+          <h3 class="text-2xl font-bold text-amber-900 mb-6">Rekap Pesanan</h3>
+          <div id="recapOrders" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Recap will be dynamically generated here -->
+          </div>
+        </div>
+        <!-- File Pesanan Tab -->
+        <div id="filePesananTab" class="tab-content hidden">
+          <h3 class="text-2xl font-bold text-amber-900 mb-6">Rekap Harian</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <label class="block text-amber-800 text-sm font-bold mb-2"
+                >Pilih Tanggal</label
+              >
+              <input
+                type="date"
+                id="recapDate"
+                class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                onchange="renderDailySummary()"
+              />
+            </div>
+            <div>
+              <label class="block text-amber-800 text-sm font-bold mb-2"
+                >Unduh Rekap</label
+              >
+              <button
+                onclick="openDailyDownloadModal()"
+                id="downloadBtn"
+                class="btn-primary w-full px-6 py-3 rounded-lg shadow-md"
+                style="display: none"
+              >
+                <i class="fas fa-download mr-2"></i>Unduh Rekap
+              </button>
+            </div>
+          </div>
+          <div
+            id="dailyStats"
+            class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
+          >
+            <div class="stats-card">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm opacity-80">Total Pesanan</p>
+                  <h3 class="text-3xl font-bold">1</h3>
+                </div>
+                <i class="fas fa-shopping-cart text-4xl opacity-50"></i>
+              </div>
+            </div>
+            <div class="stats-card">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm opacity-80">Total Pendapatan</p>
+                  <h3 class="text-3xl font-bold">Rp 22.000</h3>
+                </div>
+                <i class="fas fa-money-bill-wave text-4xl opacity-50"></i>
+              </div>
+            </div>
+          </div>
+          <div id="dailyOrders" class="space-y-4">
+            <h4 class="text-lg font-bold text-amber-900 mb-4">
+              Detail Pesanan
+            </h4>
+            <div class="space-y-3">
+              <!-- Daily orders will be dynamically generated here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="modal">
+      <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-amber-900">Verifikasi Password</h3>
+          <button
+            onclick="closePasswordModal()"
+            class="text-amber-600 hover:text-amber-800"
+          >
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <p class="text-amber-700 mb-4">
+          Masukkan password untuk mengakses pengaturan
+        </p>
+        <div class="mb-4">
+          <input
+            type="password"
+            id="passwordInput"
+            placeholder="Password"
+            class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            onkeypress="if(event.key === 'Enter') checkPassword()"
+          />
+        </div>
+        <p
+          class="text-red-500 text-sm mb-4"
+          id="passwordError"
+          style="display: none"
+        >
+          Password salah!
+        </p>
+        <div class="flex justify-end space-x-3">
+          <button
+            onclick="closePasswordModal()"
+            class="bg-amber-200 hover:bg-amber-300 text-amber-800 px-6 py-2 rounded-lg transition duration-300"
+          >
+            Batal
+          </button>
+          <button
+            onclick="checkPassword()"
+            class="btn-primary px-6 py-2 rounded-lg"
+          >
+            Masuk
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal">
+      <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-amber-900">Ganti Password</h3>
+          <button
+            onclick="closeChangePasswordModal()"
+            class="text-amber-600 hover:text-amber-800"
+          >
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <p class="text-amber-700 mb-4">
+          Masukkan password lama dan password baru
+        </p>
+        <div class="mb-4">
+          <label class="block text-amber-800 text-sm font-bold mb-2"
+            >Password Lama</label
+          >
+          <input
+            type="password"
+            id="oldPasswordInput"
+            placeholder="Password lama"
+            class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-amber-800 text-sm font-bold mb-2"
+            >Password Baru</label
+          >
+          <input
+            type="password"
+            id="newPasswordInput"
+            placeholder="Password baru"
+            class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-amber-800 text-sm font-bold mb-2"
+            >Konfirmasi Password Baru</label
+          >
+          <input
+            type="password"
+            id="confirmPasswordInput"
+            placeholder="Konfirmasi password baru"
+            class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            onkeypress="if(event.key === 'Enter') changePassword()"
+          />
+        </div>
+        <p
+          class="text-red-500 text-sm mb-4"
+          id="changePasswordError"
+          style="display: none"
+        >
+          Password tidak cocok!
+        </p>
+        <div class="flex justify-end space-x-3">
+          <button
+            onclick="closeChangePasswordModal()"
+            class="bg-amber-200 hover:bg-amber-300 text-amber-800 px-6 py-2 rounded-lg transition duration-300"
+          >
+            Batal
+          </button>
+          <button
+            onclick="changePassword()"
+            class="btn-primary px-6 py-2 rounded-lg"
+          >
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logo Upload Modal -->
+    <div id="logoUploadModal" class="modal">
+      <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-amber-900">Upload Logo</h3>
+          <button
+            onclick="closeLogoUploadModal()"
+            class="text-amber-600 hover:text-amber-800"
+          >
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <p class="text-amber-700 mb-6">Unggah gambar logo untuk WarKoBeng</p>
+
+        <div class="mb-6">
+          <div id="logoUploadArea" class="logo-upload-area">
+            <input
+              type="file"
+              id="logoUpload"
+              accept="image/*"
+              class="hidden"
+            />
+            <div id="logoUploadPrompt">
+              <i
+                class="fas fa-cloud-upload-alt text-4xl text-amber-600 mb-3"
+              ></i>
+              <p class="text-amber-800 font-medium mb-2">
+                Klik atau seret gambar logo ke sini
+              </p>
+              <p class="text-amber-600 text-sm">Format: JPG, PNG (Maks. 2MB)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-6 text-center">
+          <img
+            id="logoPreview"
+            src=""
+            alt="Logo Preview"
+            class="max-w-full max-h-48 mx-auto rounded-lg shadow-md"
+            style="display: none"
+          />
+          <p id="noLogoText" class="text-amber-500">
+            Belum ada logo yang diunggah
+          </p>
+        </div>
+
+        <div class="flex justify-end space-x-3">
+          <button
+            id="clearLogoBtn"
+            onclick="clearLogo()"
+            class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition duration-300"
+            style="display: none"
+          >
+            <i class="fas fa-trash mr-2"></i>Hapus
+          </button>
+          <button
+            onclick="closeLogoUploadModal()"
+            class="bg-amber-200 hover:bg-amber-300 text-amber-800 px-6 py-2 rounded-lg transition duration-300"
+          >
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Image Upload Modal -->
+    <div id="menuImageUploadModal" class="modal">
+      <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-amber-900">Upload Gambar Menu</h3>
+          <button
+            onclick="closeMenuImageUploadModal()"
+            class="text-amber-600 hover:text-amber-800"
+          >
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <p class="text-amber-700 mb-6">
+          Unggah gambar untuk <span id="menuImageName" class="font-bold"></span>
+        </p>
+
+        <div class="mb-6">
+          <div id="menuImageUploadArea" class="menu-image-upload-area">
+            <input
+              type="file"
+              id="menuImageUpload"
+              accept="image/*"
+              class="hidden"
+            />
+            <div id="menuImageUploadPrompt">
+              <i
+                class="fas fa-cloud-upload-alt text-4xl text-amber-600 mb-3"
+              ></i>
+              <p class="text-amber-800 font-medium mb-2">
+                Klik atau seret gambar menu ke sini
+              </p>
+              <p class="text-amber-600 text-sm">Format: JPG, PNG (Maks. 2MB)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-6 text-center">
+          <img
+            id="menuImagePreview"
+            src=""
+            alt="Menu Image Preview"
+            class="max-w-full max-h-48 mx-auto rounded-lg shadow-md"
+            style="display: none"
+          />
+          <p id="noMenuImageText" class="text-amber-500">
+            Belum ada gambar yang diunggah
+          </p>
+        </div>
+
+        <div class="flex justify-end space-x-3">
+          <button
+            id="clearMenuImageBtn"
+            onclick="clearMenuImage()"
+            class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition duration-300"
+            style="display: none"
+          >
+            <i class="fas fa-trash mr-2"></i>Hapus
+          </button>
+          <button
+            onclick="saveMenuImage()"
+            class="btn-primary px-6 py-2 rounded-lg"
+          >
+            Simpan
+          </button>
+          <button
+            onclick="closeMenuImageUploadModal()"
+            class="bg-amber-200 hover:bg-amber-300 text-amber-800 px-6 py-2 rounded-lg transition duration-300"
+          >
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Form Modal (Add/Edit) -->
+    <div id="menuFormModal" class="modal">
+      <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-amber-900" id="menuFormTitle">
+            Tambah Menu
+          </h3>
+          <button
+            onclick="closeMenuFormModal()"
+            class="text-amber-600 hover:text-amber-800"
+          >
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <p class="text-amber-700 mb-6">Isi detail menu baru</p>
+
+        <div class="mb-4">
+          <label class="block text-amber-800 text-sm font-bold mb-2"
+            >Nama Menu</label
+          >
+          <input
+            type="text"
+            id="menuNameInput"
+            placeholder="Nama menu"
+            class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-amber-800 text-sm font-bold mb-2"
+            >Kategori</label
+          >
+          <select
+            id="menuCategoryInput"
+            class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+          >
+            <option value="Kopi Espresso-Based">Kopi Espresso-Based</option>
+            <option value="Kopi Non-Espresso">Kopi Non-Espresso</option>
+            <option value="Teh">Teh</option>
+            <option value="Camilan Ringan">Camilan Ringan</option>
+            <option value="Makanan Berat Ringan">Makanan Berat Ringan</option>
+            <option value="Menu Tambahan">Menu Tambahan</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-amber-800 text-sm font-bold mb-2"
+            >Deskripsi</label
+          >
+          <textarea
+            id="menuDescriptionInput"
+            placeholder="Deskripsi menu"
+            rows="3"
+            class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+          ></textarea>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-amber-800 text-sm font-bold mb-2"
+            >Harga (Rp)</label
+          >
+          <input
+            type="number"
+            id="menuPriceInput"
+            placeholder="Harga"
+            min="0"
+            class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-amber-800 text-sm font-bold mb-2"
+            >Tipe Menu</label
+          >
+          <select
+            id="menuTypeInput"
+            class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+          >
+            <option value="drinks">Minuman</option>
+            <option value="food">Makanan</option>
+            <option value="additional">Menu Tambahan</option>
+          </select>
+        </div>
+
+        <p
+          class="text-red-500 text-sm mb-4"
+          id="menuFormError"
+          style="display: none"
+        >
+          Harap isi semua field dengan benar!
+        </p>
+
+        <div class="flex justify-end space-x-3">
+          <button
+            onclick="closeMenuFormModal()"
+            class="bg-amber-200 hover:bg-amber-300 text-amber-800 px-6 py-2 rounded-lg transition duration-300"
+          >
+            Batal
+          </button>
+          <button
+            onclick="saveMenuItem()"
+            class="btn-primary px-6 py-2 rounded-lg"
+          >
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Management Modal -->
+    <div id="qrModal" class="modal">
+      <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-amber-900">
+            Kelola QRIS Pembayaran
+          </h3>
+          <button
+            onclick="closeQrModal()"
+            class="text-amber-600 hover:text-amber-800"
+          >
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <p class="text-amber-700 mb-6">Unggah gambar QRIS untuk pembayaran</p>
+
+        <div class="mb-6">
+          <div id="qrUploadArea" class="qr-upload-area">
+            <input type="file" id="qrUpload" accept="image/*" class="hidden" />
+            <div id="uploadPrompt">
+              <i
+                class="fas fa-cloud-upload-alt text-4xl text-amber-600 mb-3"
+              ></i>
+              <p class="text-amber-800 font-medium mb-2">
+                Klik atau seret gambar QRIS ke sini
+              </p>
+              <p class="text-amber-600 text-sm">Format: JPG, PNG (Maks. 2MB)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-6 text-center">
+          <img
+            id="qrPreview"
+            src=""
+            alt="QRIS Preview"
+            class="max-w-full max-h-48 mx-auto rounded-lg shadow-md"
+            style="display: none"
+          />
+          <p id="noQrText" class="text-amber-500">
+            Belum ada QRIS yang diunggah
+          </p>
+        </div>
+
+        <div class="flex justify-end space-x-3">
+          <button
+            id="clearQrBtn"
+            onclick="clearQrCode()"
+            class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition duration-300"
+            style="display: none"
+          >
+            <i class="fas fa-trash mr-2"></i>Hapus
+          </button>
+          <button
+            onclick="closeQrModal()"
+            class="bg-amber-200 hover:bg-amber-300 text-amber-800 px-6 py-2 rounded-lg transition duration-300"
+          >
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment QR Modal -->
+    <div id="paymentQrModal" class="modal">
+      <div class="modal-content glass-effect rounded-xl p-8 max-w-sm w-full">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-amber-900">Pembayaran QRIS</h3>
+          <button
+            onclick="closePaymentQrModal()"
+            class="text-amber-600 hover:text-amber-800"
+          >
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <p class="text-amber-700 mb-4 text-center">
+          Scan QRIS untuk pembayaran
+        </p>
+        <div class="bg-white p-4 rounded-lg mb-6">
+          <img
+            id="paymentQrImage"
+            src=""
+            alt="QRIS Payment"
+            class="w-full rounded-lg"
+          />
+        </div>
+        <div class="text-center mb-6">
+          <p class="text-amber-900 font-bold text-xl" id="paymentAmount">
+            Rp 0
+          </p>
+          <p class="text-amber-600 text-sm" id="paymentTable">Meja -</p>
+        </div>
+
+        <!-- Tombol print bukti pembayaran dan konfirmasi -->
+        <div class="flex space-x-3">
+          <button
+            onclick="printPaymentProof()"
+            class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-print mr-2"></i>Cetak Bukti
+          </button>
+          <button
+            onclick="confirmPayment()"
+            class="flex-1 btn-primary py-3 rounded-lg"
+          >
+            <i class="fas fa-check mr-2"></i>Konfirmasi
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Download Options Modal -->
+    <div id="downloadModal" class="modal">
+      <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-amber-900">Unduh Rekap</h3>
+          <button
+            onclick="closeDownloadModal()"
+            class="text-amber-600 hover:text-amber-800"
+          >
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <p class="text-amber-700 mb-6">
+          Pilih format unduhan untuk <span id="downloadDate"></span>
+        </p>
+        <div class="space-y-3">
+          <button
+            onclick="downloadDailyRecap('json')"
+            class="w-full bg-amber-700 hover:bg-amber-800 text-white px-6 py-3 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-file-code mr-2"></i>JSON
+          </button>
+          <button
+            onclick="downloadDailyRecap('csv')"
+            class="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-file-csv mr-2"></i>CSV
+          </button>
+          <button
+            onclick="downloadDailyRecap('excel')"
+            class="w-full bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-file-excel mr-2"></i>Excel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Global variables
+      let menuItems = [
+        {
+          id: 1,
+          name: "Espresso",
+          category: "Kopi Espresso-Based",
+          description: "Ekstraksi kopi murni, intens dan kaya rasa",
+          price: 20000,
+          type: "drinks",
+          image: "https://via.placeholder.com/300",
+        },
+        {
+          id: 2,
+          name: "Americano",
+          category: "Kopi Espresso-Based",
+          description: "Espresso dengan air panas",
+          price: 25000,
+          type: "drinks",
+          image: "https://via.placeholder.com/300",
+        },
+        {
+          id: 3,
+          name: "Cappuccino",
+          category: "Kopi Espresso-Based",
+          description: "Espresso dengan susu dan busa",
+          price: 30000,
+          type: "drinks",
+          image: "https://via.placeholder.com/300",
+        },
+        {
+          id: 4,
+          name: "Latte",
+          category: "Kopi Espresso-Based",
+          description: "Espresso dengan susu kukus",
+          price: 30000,
+          type: "drinks",
+          image: "https://via.placeholder.com/300",
+        },
+        {
+          id: 5,
+          name: "Mocha",
+          category: "Kopi Espresso-Based",
+          description: "Espresso dengan cokelat",
+          price: 35000,
+          type: "drinks",
+          image: "https://via.placeholder.com/300",
+        },
+        {
+          id: 6,
+          name: "Croissant",
+          category: "Camilan Ringan",
+          description: "Pastry renyah dan gurih",
+          price: 25000,
+          type: "food",
+          image: "https://via.placeholder.com/300",
+        },
+        {
+          id: 7,
+          name: "Cookies",
+          category: "Camilan Ringan",
+          description: "Cookies klasik",
+          price: 20000,
+          type: "food",
+          image: "https://via.placeholder.com/300",
+        },
+        {
+          id: 8,
+          name: "Sandwich",
+          category: "Makanan Berat Ringan",
+          description: "Roti isi tuna",
+          price: 40000,
+          type: "food",
+          image: "https://via.placeholder.com/300",
+        },
+        {
+          id: 9,
+          name: "French Fries",
+          category: "Menu Tambahan",
+          description: "Kentang goreng renyah",
+          price: 22000,
+          type: "additional",
+          image: "https://via.placeholder.com/300",
+        },
+        {
+          id: 10,
+          name: "Nasi Goreng",
+          category: "Menu Tambahan",
+          description: "Nasi goreng spesial",
+          price: 35000,
+          type: "additional",
+          image: "https://via.placeholder.com/300",
+        },
+      ];
+      let currentOrder = [];
+      let completedOrders = [];
+      let customQrImage = localStorage.getItem("customQrImage") || null;
+      let customLogoImage = localStorage.getItem("customLogoImage") || null;
+      let isSettingsActive = false;
+      let isDarkMode = localStorage.getItem("darkMode") === "true";
+      let currentPaymentOrderId = null;
+      let currentMenuImageId = null;
+      let currentEditingMenuItem = null;
+      let correctPassword =
+        localStorage.getItem("warkobeng_password") || "AnisaWTNT";
+
+      // Initialize dark mode
+      if (isDarkMode) {
+        document.body.classList.add("dark-mode");
+        document
+          .getElementById("darkModeIcon")
+          .classList.replace("fa-moon", "fa-sun");
+      }
+
+      // Toast notification
+      function showToast(message, type = "success") {
+        const toast = document.getElementById("toast");
+        const toastMessage = document.getElementById("toastMessage");
+        const toastIcon = document.getElementById("toastIcon");
+        toastMessage.textContent = message;
+        if (type === "success") {
+          toastIcon.className = "fas fa-check-circle text-green-500 text-xl";
+        } else if (type === "error") {
+          toastIcon.className =
+            "fas fa-exclamation-circle text-red-500 text-xl";
+        } else if (type === "info") {
+          toastIcon.className = "fas fa-info-circle text-blue-500 text-xl";
+        }
+        toast.classList.add("show");
+        setTimeout(() => {
+          hideToast();
+        }, 3000);
+      }
+      // Tambahkan di bagian pengaturan
+function addBackupRestoreButtons() {
+  const settingsBtn = document.getElementById('settingsBtn');
+  
+  // Container untuk tombol backup/restore
+  const backupContainer = document.createElement('div');
+  backupContainer.className = 'flex space-x-2 mt-2';
+  backupContainer.id = 'backupContainer';
+  backupContainer.style.display = 'none';
+  
+  // Tombol Backup
+  const backupBtn = document.createElement('button');
+  backupBtn.className = 'bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300';
+  backupBtn.innerHTML = '<i class="fas fa-download mr-2"></i>Backup Data';
+  backupBtn.onclick = backupData;
+  
+  // Tombol Restore
+  const restoreBtn = document.createElement('button');
+  restoreBtn.className = 'bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300';
+  restoreBtn.innerHTML = '<i class="fas fa-upload mr-2"></i>Restore Data';
+  restoreBtn.onclick = restoreData;
+  
+  // File input untuk restore
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.json';
+  fileInput.style.display = 'none';
+  fileInput.id = 'restoreFileInput';
+  fileInput.onchange = handleRestoreFile;
+  
+  backupContainer.appendChild(backupBtn);
+  backupContainer.appendChild(restoreBtn);
+  backupContainer.appendChild(fileInput);
+  
+  settingsBtn.parentNode.insertBefore(backupContainer, settingsBtn.nextSibling);
+  
+  // Update visibility
+  const updateBackupVisibility = () => {
+    backupContainer.style.display = isSettingsActive ? 'flex' : 'none';
+  };
+  
+  // Modifikasi toggleSettingsMode
+  const originalToggleSettingsMode = toggleSettingsMode;
+  toggleSettingsMode = function() {
+    originalToggleSettingsMode();
+    updateBackupVisibility();
+  };
+}
+
+// Fungsi backup data
+function backupData() {
+  const data = {
+    menuItems: menuItems,
+    completedOrders: completedOrders,
+    customQrImage: customQrImage,
+    customLogoImage: customLogoImage,
+    correctPassword: correctPassword,
+    backupDate: new Date().toISOString()
+  };
+  
+  const dataStr = JSON.stringify(data, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(dataBlob);
+  link.download = `warkobeng_backup_${new Date().toISOString().split('T')[0]}.json`;
+  link.click();
+  
+  showToast("Data berhasil di-backup", "success");
+}
+
+// Fungsi restore data
+function restoreData() {
+  document.getElementById('restoreFileInput').click();
+}
+
+// Handle file restore
+function handleRestoreFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      
+      // Validasi data
+      if (data.menuItems && data.completedOrders) {
+        // Konfirmasi restore
+        if (confirm("Apakah Anda yakin ingin me-restore data? Data saat ini akan ditimpa.")) {
+          // Restore data
+          menuItems = data.menuItems || [];
+          completedOrders = data.completedOrders || [];
+          customQrImage = data.customQrImage || null;
+          customLogoImage = data.customLogoImage || null;
+          correctPassword = data.correctPassword || "AnisaWTNT";
+          
+          // Save to localStorage
+          saveMenuItems();
+          saveOrders();
+          localStorage.setItem("customQrImage", customQrImage);
+          localStorage.setItem("customLogoImage", customLogoImage);
+          localStorage.setItem("warkobeng_password", correctPassword);
+          
+          // Reload UI
+          renderMenu();
+          renderCompletedOrders();
+          
+          // Update logo jika ada
+          if (customLogoImage) {
+            document.getElementById("logoImage").src = customLogoImage;
+          }
+          
+          showToast("Data berhasil di-restore", "success");
+        }
+      } else {
+        showToast("File backup tidak valid", "error");
+      }
+    } catch (error) {
+      showToast("Gagal membaca file backup", "error");
+    }
+  };
+  reader.readAsText(file);
+  
+  // Reset file input
+  event.target.value = '';
+}
+
+// Inisialisasi tombol backup/restore
+document.addEventListener('DOMContentLoaded', () => {
+  // ... kode inisialisasi lainnya ...
+  
+  // Tambahkan tombol backup/restore
+  addBackupRestoreButtons();
+});
+
+      function hideToast() {
+        document.getElementById("toast").classList.remove("show");
+      }
+
+      // Dark mode toggle
+      function toggleDarkMode() {
+        isDarkMode = !isDarkMode;
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem("darkMode", isDarkMode);
+        const icon = document.getElementById("darkModeIcon");
+        if (isDarkMode) {
+          icon.classList.replace("fa-moon", "fa-sun");
+        } else {
+          icon.classList.replace("fa-sun", "fa-moon");
+        }
+      }
+
+      // Tab navigation
+      function showTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll(".tab-content").forEach((tab) => {
+          tab.classList.add("hidden");
+        });
+        // Remove active class from all tab buttons
+        document.querySelectorAll(".tab-button").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        // Show selected tab
+        document.getElementById(tabName + "Tab").classList.remove("hidden");
+        // Add active class to clicked tab button
+        const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+        activeBtn.classList.add("active");
+        // Render specific content for each tab
+        if (tabName === "results") {
+          renderCompletedOrders();
+        } else if (tabName === "recap") {
+          renderRecapOrders();
+        } else if (tabName === "filePesanan") {
+          renderDailySummary();
+        }
+      }
+
+      // Password modal functions
+      function openPasswordModal() {
+        document.getElementById("passwordModal").classList.add("show");
+        document.getElementById("passwordInput").value = "";
+        document.getElementById("passwordError").style.display = "none";
+      }
+
+      function closePasswordModal() {
+        document.getElementById("passwordModal").classList.remove("show");
+      }
+
+      function checkPassword() {
+        const password = document.getElementById("passwordInput").value;
+        if (password === correctPassword) {
+          closePasswordModal();
+          toggleSettingsMode();
+        } else {
+          document.getElementById("passwordError").style.display = "block";
+          document.getElementById("passwordInput").value = "";
+        }
+      }
+
+      // Change password modal functions
+      function openChangePasswordModal() {
+        document.getElementById("changePasswordModal").classList.add("show");
+        document.getElementById("oldPasswordInput").value = "";
+        document.getElementById("newPasswordInput").value = "";
+        document.getElementById("confirmPasswordInput").value = "";
+        document.getElementById("changePasswordError").style.display = "none";
+      }
+
+      function closeChangePasswordModal() {
+        document.getElementById("changePasswordModal").classList.remove("show");
+      }
+
+      function changePassword() {
+        const oldPassword = document.getElementById("oldPasswordInput").value;
+        const newPassword = document.getElementById("newPasswordInput").value;
+        const confirmPassword = document.getElementById(
+          "confirmPasswordInput"
+        ).value;
+
+        if (oldPassword !== correctPassword) {
+          document.getElementById("changePasswordError").textContent =
+            "Password lama salah!";
+          document.getElementById("changePasswordError").style.display =
+            "block";
+          return;
+        }
+
+        if (newPassword !== confirmPassword) {
+          document.getElementById("changePasswordError").textContent =
+            "Password baru tidak cocok!";
+          document.getElementById("changePasswordError").style.display =
+            "block";
+          return;
+        }
+
+        if (newPassword.length < 6) {
+          document.getElementById("changePasswordError").textContent =
+            "Password baru minimal 6 karakter!";
+          document.getElementById("changePasswordError").style.display =
+            "block";
+          return;
+        }
+
+        correctPassword = newPassword;
+        localStorage.setItem("warkobeng_password", correctPassword);
+        closeChangePasswordModal();
+        showToast("Password berhasil diubah", "success");
+      }
+
+      function handleSettingsClick() {
+        if (isSettingsActive) {
+          toggleSettingsMode();
+        } else {
+          openPasswordModal();
+        }
+      }
+
+      // Settings mode
+      function toggleSettingsMode() {
+        isSettingsActive = !isSettingsActive;
+        renderMenu();
+        const settingsBtn = document.getElementById("settingsBtn");
+        if (isSettingsActive) {
+          settingsBtn.innerHTML =
+            '<i class="fas fa-times mr-2"></i>Keluar Pengaturan';
+          settingsBtn.classList.add(
+            "bg-red-500",
+            "hover:bg-red-600",
+            "text-white"
+          );
+          settingsBtn.classList.remove(
+            "bg-amber-100",
+            "hover:bg-amber-200",
+            "text-amber-800"
+          );
+        } else {
+          settingsBtn.innerHTML = '<i class="fas fa-cog mr-2"></i>Pengaturan';
+          settingsBtn.classList.remove(
+            "bg-red-500",
+            "hover-bg-red-600",
+            "text-white"
+          );
+          settingsBtn.classList.add(
+            "bg-amber-100",
+            "hover:bg-amber-200",
+            "text-amber-800"
+          );
+        }
+
+        // Show/hide settings buttons
+        document.getElementById("manageQrBtn").style.display = isSettingsActive
+          ? "block"
+          : "none";
+        document.getElementById("changePasswordBtn").style.display =
+          isSettingsActive ? "block" : "none";
+        document.getElementById("clearOrderBtn").style.display =
+          isSettingsActive ? "block" : "none";
+        document.getElementById("downloadBtn").style.display = isSettingsActive
+          ? "block"
+          : "none";
+        document.getElementById("logoUploadBtn").style.display =
+          isSettingsActive ? "block" : "none";
+
+        // Show/hide add item buttons
+        document.querySelectorAll(".add-item-btn").forEach((btn) => {
+          btn.style.display = isSettingsActive ? "block" : "none";
+        });
+      }
+
+      // Render menu items
+      function renderMenu() {
+        const drinksContainer = document.getElementById("drinksMenu");
+        const foodContainer = document.getElementById("foodMenu");
+        const additionalContainer = document.getElementById("additionalMenu");
+        drinksContainer.innerHTML = "";
+        foodContainer.innerHTML = "";
+        additionalContainer.innerHTML = "";
+        menuItems
+          .filter((item) => item.type === "drinks")
+          .forEach((item) => {
+            drinksContainer.appendChild(createMenuCard(item));
+          });
+        menuItems
+          .filter((item) => item.type === "food")
+          .forEach((item) => {
+            foodContainer.appendChild(createMenuCard(item));
+          });
+        menuItems
+          .filter((item) => item.type === "additional")
+          .forEach((item) => {
+            additionalContainer.appendChild(createMenuCard(item));
+          });
+      }
+
+      function createMenuCard(item) {
+        const card = document.createElement("div");
+        card.className =
+          "menu-card shadow-lg overflow-hidden border border-amber-100";
+        let actionButtons = "";
+        let imageSection = `
+          <div class="relative">
+            <img src="${item.image}" alt="${
+          item.name
+        }" class="w-full h-48 object-cover">
+            <div class="absolute top-2 right-2">
+              <span class="badge badge-success bg-green-100">${
+                item.category
+              }</span>
+            </div>
+            ${
+              isSettingsActive
+                ? `
+              <button onclick="openMenuImageUploadModal(${item.id})" class="absolute bottom-2 right-2 bg-blue-500 hover:bg-blue-600 text-white w-8 h-8 rounded-full transition duration-300" title="Upload Gambar">
+                <i class="fas fa-camera text-sm"></i>
+              </button>
+            `
+                : ""
+            }
+          </div>
+        `;
+
+        if (isSettingsActive) {
+          actionButtons = `
+            <div class="flex space-x-2 mt-4">
+              <button onclick="editMenuItem(${item.id})" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg transition duration-300">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button onclick="deleteMenuItem(${item.id})" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition duration-300">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          `;
+        } else {
+          actionButtons = `
+            <button onclick="addToOrder(${item.id})" class="w-full btn-primary py-2 rounded-lg mt-4">
+              <i class="fas fa-plus mr-2"></i>Tambah ke Pesanan
+            </button>
+          `;
+        }
+        card.innerHTML = `
+          ${imageSection}
+          <div class="p-4">
+            <h5 class="text-lg font-bold mb-1 text-amber-900">${item.name}</h5>
+            <p class="text-amber-700 text-sm mb-3">${item.description}</p>
+            <div class="flex justify-between items-center">
+              <span class="text-2xl font-bold text-amber-700">Rp ${item.price.toLocaleString(
+                "id-ID"
+              )}</span>
+            </div>
+            ${actionButtons}
+          </div>
+        `;
+        return card;
+      }
+
+      // Global search
+      document.getElementById("globalSearch").addEventListener("input", (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const allCards = document.querySelectorAll(".menu-card");
+        allCards.forEach((card) => {
+          const itemName = card.querySelector("h5").textContent.toLowerCase();
+          if (itemName.includes(searchTerm)) {
+            card.style.display = "block";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      });
+
+      // Order management
+      function addToOrder(itemId) {
+        const item = menuItems.find((i) => i.id === itemId);
+        const existingItem = currentOrder.find((i) => i.id === itemId);
+        if (existingItem) {
+          existingItem.quantity++;
+        } else {
+          currentOrder.push({ ...item, quantity: 1 });
+        }
+        renderOrderList();
+        showToast(`${item.name} ditambahkan ke pesanan`, "success");
+        showTab("order");
+      }
+
+      function renderOrderList() {
+        const orderList = document.getElementById("orderList");
+        if (currentOrder.length === 0) {
+          orderList.innerHTML = `
+            <tr>
+              <td colspan="5" class="text-center py-8 text-amber-600">
+                <i class="fas fa-shopping-cart text-4xl mb-2"></i>
+                <p>Belum ada pesanan</p>
+              </td>
+            </tr>
+          `;
+        } else {
+          orderList.innerHTML = currentOrder
+            .map(
+              (item, index) => `
+            <tr class="order-item hover:bg-amber-50">
+              <td class="py-3 px-4">
+                <div class="flex items-center">
+                  <img src="${item.image}" alt="${
+                item.name
+              }" class="w-12 h-12 rounded-lg object-cover mr-3">
+                  <div>
+                    <p class="font-medium text-amber-900">${item.name}</p>
+                    <p class="text-sm text-amber-600">${item.category}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-4">
+                <div class="flex items-center space-x-2">
+                  <button onclick="updateQuantity(${index}, -1)" class="bg-amber-200 hover:bg-amber-300 text-amber-800 w-8 h-8 rounded-full transition duration-300">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <span class="w-12 text-center font-medium text-amber-900">${
+                    item.quantity
+                  }</span>
+                  <button onclick="updateQuantity(${index}, 1)" class="bg-amber-200 hover:bg-amber-300 text-amber-800 w-8 h-8 rounded-full transition duration-300">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+              </td>
+              <td class="py-3 px-4 text-amber-900">Rp ${item.price.toLocaleString(
+                "id-ID"
+              )}</td>
+              <td class="py-3 px-4 font-medium text-amber-900">Rp ${(
+                item.price * item.quantity
+              ).toLocaleString("id-ID")}</td>
+              <td class="py-3 px-4">
+                <button onclick="removeFromOrder(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition duration-300">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          `
+            )
+            .join("");
+        }
+        calculateTotal();
+      }
+
+      function updateQuantity(index, change) {
+        currentOrder[index].quantity += change;
+        if (currentOrder[index].quantity <= 0) {
+          removeFromOrder(index);
+        } else {
+          renderOrderList();
+        }
+      }
+
+      function removeFromOrder(index) {
+        const item = currentOrder[index];
+        currentOrder.splice(index, 1);
+        renderOrderList();
+        showToast(`${item.name} dihapus dari pesanan`, "info");
+      }
+
+      function calculateTotal() {
+        const subtotal = currentOrder.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+        const tax = subtotal * 0.1;
+        const total = subtotal + tax;
+        document.getElementById(
+          "subtotal"
+        ).textContent = `Rp ${subtotal.toLocaleString("id-ID")}`;
+        document.getElementById("tax").textContent = `Rp ${tax.toLocaleString(
+          "id-ID"
+        )}`;
+        document.getElementById(
+          "grandTotal"
+        ).textContent = `Rp ${total.toLocaleString("id-ID")}`;
+      }
+
+      function clearOrder() {
+        if (currentOrder.length === 0) {
+          showToast("Pesanan sudah kosong", "info");
+          return;
+        }
+        currentOrder = [];
+        renderOrderList();
+        showToast("Pesanan dibersihkan", "success");
+      }
+
+      function completeOrder() {
+        const tableNumber = document.getElementById("tableNumber").value.trim();
+        if (currentOrder.length === 0) {
+          showToast("Tidak ada pesanan untuk diselesaikan", "error");
+          return;
+        }
+        if (!tableNumber) {
+          showToast("Masukkan nomor meja", "error");
+          return;
+        }
+        const existingOrder = completedOrders.find(
+          (order) => order.table === tableNumber && !order.paid
+        );
+        if (existingOrder) {
+          showToast(
+            `Meja ${tableNumber} masih ada pesanan yang belum dibayar`,
+            "error"
+          );
+          return;
+        }
+        const total = parseFloat(
+          document
+            .getElementById("grandTotal")
+            .textContent.replace("Rp ", "")
+            .replace(/\./g, "")
+        );
+        const newOrder = {
+          id: Date.now(),
+          timestamp: new Date().toLocaleString("id-ID"),
+          date: new Date().toISOString().split("T")[0],
+          table: tableNumber,
+          items: [...currentOrder],
+          total: total,
+          paid: false,
+        };
+        completedOrders.push(newOrder);
+        saveOrders();
+        currentOrder = [];
+        document.getElementById("tableNumber").value = "";
+        renderOrderList();
+        showToast("Pesanan berhasil dibuat", "success");
+        showTab("results");
+      }
+
+      // Print receipt function
+      function printReceipt(orderId) {
+        const order = completedOrders.find((o) => o.id === orderId);
+        if (!order) return;
+
+        // Buat window baru untuk print
+        const printWindow = window.open("", "_blank");
+
+        // Template struk pembayaran
+        const receiptHTML = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Struk Pembayaran - WarKoBeng</title>
+            <style>
+              @page {
+                size: 80mm auto;
+                margin: 5mm;
+              }
+              body {
+                font-family: 'Courier New', monospace;
+                font-size: 12px;
+                line-height: 1.4;
+                margin: 0;
+                padding: 10px;
+              }
+              .header {
+                text-align: center;
+                margin-bottom: 15px;
+              }
+              .title {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 5px;
+              }
+              .subtitle {
+                font-size: 12px;
+                margin-bottom: 10px;
+              }
+              .divider {
+                border-top: 1px dashed #000;
+                margin: 10px 0;
+              }
+              .info-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 5px;
+              }
+              .items {
+                margin: 10px 0;
+              }
+              .item-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 3px;
+              }
+              .total-section {
+                margin-top: 15px;
+              }
+              .total-row {
+                display: flex;
+                justify-content: space-between;
+                font-weight: bold;
+                margin-bottom: 5px;
+              }
+              .footer {
+                text-align: center;
+                margin-top: 20px;
+                font-size: 10px;
+              }
+              .paid-status {
+                text-align: center;
+                font-weight: bold;
+                font-size: 14px;
+                margin: 15px 0;
+                padding: 5px;
+                border: 1px solid #000;
+                background-color: #d4edda;
+                color: #155724;
+              }
+              @media print {
+                body {
+                  -webkit-print-color-adjust: exact;
+                  color-adjust: exact;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <div class="title">WARKOBENG</div>
+              <div class="subtitle">Warung Kopi Bengkel</div>
+              <div class="subtitle">Tempat Nyaman untuk Kopi dan Obrolan Hangat</div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="info-row">
+              <span>Tanggal:</span>
+              <span>${order.date}</span>
+            </div>
+            <div class="info-row">
+              <span>Waktu:</span>
+              <span>${order.timestamp.split(", ")[1]}</span>
+            </div>
+            <div class="info-row">
+              <span>Meja:</span>
+              <span>${order.table}</span>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="items">
+              ${order.items
+                .map(
+                  (item) => `
+                <div class="item-row">
+                  <span>${item.name} x ${item.quantity}</span>
+                  <span>Rp ${(item.price * item.quantity).toLocaleString(
+                    "id-ID"
+                  )}</span>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="total-section">
+              <div class="info-row">
+                <span>Subtotal:</span>
+                <span>Rp ${(order.total * 0.9).toLocaleString("id-ID")}</span>
+              </div>
+              <div class="info-row">
+                <span>Pajak (10%):</span>
+                <span>Rp ${(order.total * 0.1).toLocaleString("id-ID")}</span>
+              </div>
+              <div class="total-row">
+                <span>TOTAL:</span>
+                <span>Rp ${order.total.toLocaleString("id-ID")}</span>
+              </div>
+            </div>
+            
+            <div class="paid-status">
+              ✓ SUDAH DIBAYAR
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="footer">
+              <div>Terima kasih atas kunjungan Anda</div>
+              <div>WarKoBeng - Warung Kopi Bengkel</div>
+            </div>
+          </body>
+          </html>
+        `;
+
+        printWindow.document.write(receiptHTML);
+        printWindow.document.close();
+
+        // Tunggu sebentar lalu print
+        setTimeout(() => {
+          printWindow.print();
+          printWindow.close();
+        }, 500);
+
+        showToast("Struk pembayaran sedang dicetak", "info");
+      }
+
+      // Print payment proof function
+      function printPaymentProof() {
+        if (!currentPaymentOrderId) return;
+
+        const order = completedOrders.find(
+          (o) => o.id === currentPaymentOrderId
+        );
+        if (!order) return;
+
+        // Buat window baru untuk print
+        const printWindow = window.open("", "_blank");
+
+        // Template struk pembayaran dengan status menunggu
+        const receiptHTML = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Bukti Pembayaran - WarKoBeng</title>
+            <style>
+              @page {
+                size: 80mm auto;
+                margin: 5mm;
+              }
+              body {
+                font-family: 'Courier New', monospace;
+                font-size: 12px;
+                line-height: 1.4;
+                margin: 0;
+                padding: 10px;
+              }
+              .header {
+                text-align: center;
+                margin-bottom: 15px;
+              }
+              .title {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 5px;
+              }
+              .subtitle {
+                font-size: 12px;
+                margin-bottom: 10px;
+              }
+              .divider {
+                border-top: 1px dashed #000;
+                margin: 10px 0;
+              }
+              .info-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 5px;
+              }
+              .items {
+                margin: 10px 0;
+              }
+              .item-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 3px;
+              }
+              .total-section {
+                margin-top: 15px;
+              }
+              .total-row {
+                display: flex;
+                justify-content: space-between;
+                font-weight: bold;
+                margin-bottom: 5px;
+              }
+              .footer {
+                text-align: center;
+                margin-top: 20px;
+                font-size: 10px;
+              }
+              .payment-status {
+                text-align: center;
+                font-weight: bold;
+                font-size: 14px;
+                margin: 15px 0;
+                padding: 5px;
+                border: 1px solid #000;
+                background-color: #fff3cd;
+                color: #856404;
+              }
+              .qr-section {
+                text-align: center;
+                margin: 15px 0;
+              }
+              .qr-code {
+                width: 150px;
+                height: 150px;
+                margin: 0 auto;
+                border: 1px solid #ddd;
+              }
+              @media print {
+                body {
+                  -webkit-print-color-adjust: exact;
+                  color-adjust: exact;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <div class="title">WARKOBENG</div>
+              <div class="subtitle">Warung Kopi Bengkel</div>
+              <div class="subtitle">Tempat Nyaman untuk Kopi dan Obrolan Hangat</div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="info-row">
+              <span>Tanggal:</span>
+              <span>${order.date}</span>
+            </div>
+            <div class="info-row">
+              <span>Waktu:</span>
+              <span>${order.timestamp.split(", ")[1]}</span>
+            </div>
+            <div class="info-row">
+              <span>Meja:</span>
+              <span>${order.table}</span>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="items">
+              ${order.items
+                .map(
+                  (item) => `
+                <div class="item-row">
+                  <span>${item.name} x ${item.quantity}</span>
+                  <span>Rp ${(item.price * item.quantity).toLocaleString(
+                    "id-ID"
+                  )}</span>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="total-section">
+              <div class="info-row">
+                <span>Subtotal:</span>
+                <span>Rp ${(order.total * 0.9).toLocaleString("id-ID")}</span>
+              </div>
+              <div class="info-row">
+                <span>Pajak (10%):</span>
+                <span>Rp ${(order.total * 0.1).toLocaleString("id-ID")}</span>
+              </div>
+              <div class="total-row">
+                <span>TOTAL:</span>
+                <span>Rp ${order.total.toLocaleString("id-ID")}</span>
+              </div>
+            </div>
+            
+            <div class="payment-status">
+              ⏳ MENUNGGU PEMBAYARAN
+            </div>
+            
+            <div class="qr-section">
+              <p class="text-sm mb-2">Scan QRIS untuk pembayaran:</p>
+              <img src="${customQrImage}" alt="QRIS Payment" class="qr-code">
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="footer">
+              <div>Terima kasih atas kunjungan Anda</div>
+              <div>WarKoBeng - Warung Kopi Bengkel</div>
+            </div>
+          </body>
+          </html>
+        `;
+
+        printWindow.document.write(receiptHTML);
+        printWindow.document.close();
+
+        // Tunggu sebentar lalu print
+        setTimeout(() => {
+          printWindow.print();
+          printWindow.close();
+        }, 500);
+
+        showToast("Bukti pembayaran sedang dicetak", "info");
+      }
+
+      // Completed orders
+      function renderCompletedOrders() {
+        const container = document.getElementById("completedOrders");
+        if (completedOrders.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-12 col-span-2">
+              <i class="fas fa-history text-6xl text-amber-300 mb-4"></i>
+              <p class="text-amber-600">Belum ada pesanan yang diselesaikan</p>
+            </div>
+          `;
+          return;
+        }
+        container.innerHTML = completedOrders
+          .map((order) => {
+            const statusBadge = order.paid
+              ? '<span class="badge badge-success"><i class="fas fa-check mr-1"></i>Sudah Dibayar</span>'
+              : '<span class="badge badge-danger"><i class="fas fa-clock mr-1"></i>Belum Dibayar</span>';
+            return `
+            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300 border border-amber-100">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <h4 class="text-lg font-bold text-amber-900">Meja ${
+                    order.table
+                  }</h4>
+                  <p class="text-sm text-amber-600">${order.timestamp}</p>
+                </div>
+                ${statusBadge}
+              </div>
+              
+              <div class="space-y-2 mb-4">
+                ${order.items
+                  .map(
+                    (item) => `
+                  <div class="flex justify-between text-sm">
+                    <span class="text-amber-800">${item.name} x ${
+                      item.quantity
+                    }</span>
+                    <span class="text-amber-700">Rp ${(
+                      item.price * item.quantity
+                    ).toLocaleString("id-ID")}</span>
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+              
+              <div class="border-t border-amber-100 pt-3">
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-amber-900">Total:</span>
+                  <span class="text-xl font-bold text-amber-700">Rp ${order.total.toLocaleString(
+                    "id-ID"
+                  )}</span>
+                </div>
+              </div>
+              
+              <div class="flex space-x-2 mt-4">
+                ${
+                  !order.paid
+                    ? `
+                  <button onclick="showPaymentQR(${order.id})" class="flex-1 btn-primary py-2 rounded-lg">
+                    <i class="fas fa-qrcode mr-2"></i>Bayar Sekarang
+                  </button>
+                `
+                    : `
+                  <button onclick="printReceipt(${order.id})" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition duration-300">
+                    <i class="fas fa-print mr-2"></i>Cetak Struk
+                  </button>
+                `
+                }
+              </div>
+            </div>
+          `;
+          })
+          .join("");
+      }
+
+      // Recap orders
+      function renderRecapOrders() {
+        const container = document.getElementById("recapOrders");
+        if (completedOrders.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-12 col-span-2">
+              <i class="fas fa-chart-bar text-6xl text-amber-300 mb-4"></i>
+              <p class="text-amber-600">Belum ada rekap pesanan</p>
+            </div>
+          `;
+          return;
+        }
+        const paidOrders = completedOrders.filter((o) => o.paid);
+        const unpaidOrders = completedOrders.filter((o) => !o.paid);
+        container.innerHTML = `
+          ${
+            unpaidOrders.length > 0
+              ? `
+            <div class="col-span-2 mb-6">
+              <h4 class="text-xl font-bold text-red-600 mb-4">
+                <i class="fas fa-exclamation-circle mr-2"></i>Pesanan Belum Dibayar
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                ${unpaidOrders
+                  .map(
+                    (order) => `
+                  <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div class="flex justify-between items-center mb-2">
+                      <h5 class="font-bold text-amber-900">Meja ${
+                        order.table
+                      }</h5>
+                      <span class="text-red-600 font-bold">Rp ${order.total.toLocaleString(
+                        "id-ID"
+                      )}</span>
+                    </div>
+                    <p class="text-sm text-amber-600 mb-3">${
+                      order.timestamp
+                    }</p>
+                    <button onclick="showPaymentQR(${
+                      order.id
+                    })" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg text-sm">
+                      <i class="fas fa-qrcode mr-2"></i>Bayar
+                    </button>
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+            </div>
+          `
+              : ""
+          }
+          
+          ${
+            paidOrders.length > 0
+              ? `
+            <div class="col-span-2">
+              <h4 class="text-xl font-bold text-green-600 mb-4">
+                <i class="fas fa-check-circle mr-2"></i>Pesanan Selesai
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                ${paidOrders
+                  .map(
+                    (order) => `
+                  <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div class="flex justify-between items-center mb-2">
+                      <h5 class="font-bold text-amber-900">Meja ${
+                        order.table
+                      }</h5>
+                      <span class="text-green-600 font-bold">Rp ${order.total.toLocaleString(
+                        "id-ID"
+                      )}</span>
+                    </div>
+                    <p class="text-sm text-amber-600">${order.timestamp}</p>
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+            </div>
+          `
+              : ""
+          }
+        `;
+      }
+
+      // Daily summary
+      function renderDailySummary() {
+        const selectedDate = document.getElementById("recapDate").value;
+        const statsContainer = document.getElementById("dailyStats");
+        const ordersContainer = document.getElementById("dailyOrders");
+        const downloadBtn = document.getElementById("downloadBtn");
+        if (!selectedDate) {
+          statsContainer.innerHTML =
+            '<p class="text-center text-amber-600 col-span-2">Pilih tanggal untuk melihat ringkasan</p>';
+          ordersContainer.innerHTML = "";
+          downloadBtn.disabled = true;
+          return;
+        }
+        const dailyOrders = completedOrders.filter(
+          (order) => order.date === selectedDate
+        );
+        if (dailyOrders.length === 0) {
+          statsContainer.innerHTML = `
+            <div class="col-span-2 text-center py-8">
+              <i class="fas fa-calendar-times text-4xl text-amber-300 mb-2"></i>
+              <p class="text-amber-600">Tidak ada pesanan untuk tanggal ini</p>
+            </div>
+          `;
+          ordersContainer.innerHTML = "";
+          downloadBtn.disabled = true;
+          return;
+        }
+        const totalOrders = dailyOrders.length;
+        const totalRevenue = dailyOrders.reduce(
+          (sum, order) => sum + order.total,
+          0
+        );
+        const paidOrders = dailyOrders.filter((o) => o.paid).length;
+        statsContainer.innerHTML = `
+          <div class="stats-card">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm opacity-80">Total Pesanan</p>
+                <h3 class="text-3xl font-bold">${totalOrders}</h3>
+              </div>
+              <i class="fas fa-shopping-cart text-4xl opacity-50"></i>
+            </div>
+          </div>
+          <div class="stats-card">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm opacity-80">Total Pendapatan</p>
+                <h3 class="text-3xl font-bold">Rp ${totalRevenue.toLocaleString(
+                  "id-ID"
+                )}</h3>
+              </div>
+              <i class="fas fa-money-bill-wave text-4xl opacity-50"></i>
+            </div>
+          </div>
+        `;
+        ordersContainer.innerHTML = `
+          <h4 class="text-lg font-bold text-amber-900 mb-4">Detail Pesanan</h4>
+          <div class="space-y-3">
+            ${dailyOrders
+              .map(
+                (order) => `
+              <div class="bg-white rounded-lg shadow p-4 border border-amber-100">
+                <div class="flex justify-between items-center mb-2">
+                  <h5 class="font-medium text-amber-900">Meja ${
+                    order.table
+                  }</h5>
+                  <span class="${
+                    order.paid ? "text-green-600" : "text-red-600"
+                  } font-medium">
+                    ${order.paid ? "Sudah Dibayar" : "Belum Dibayar"}
+                  </span>
+                </div>
+                <p class="text-sm text-amber-600 mb-2">${order.timestamp}</p>
+                <div class="text-sm">
+                  ${order.items
+                    .map(
+                      (item) => `
+                    <div class="flex justify-between">
+                      <span class="text-amber-800">${item.name} x ${
+                        item.quantity
+                      }</span>
+                      <span class="text-amber-700">Rp ${(
+                        item.price * item.quantity
+                      ).toLocaleString("id-ID")}</span>
+                    </div>
+                  `
+                    )
+                    .join("")}
+                </div>
+                <div class="border-t border-amber-100 mt-2 pt-2">
+                  <div class="flex justify-between font-bold text-amber-900">
+                    <span>Total:</span>
+                    <span>Rp ${order.total.toLocaleString("id-ID")}</span>
+                  </div>
+                </div>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `;
+        downloadBtn.disabled = false;
+      }
+
+      // Logo Management
+      function openLogoUploadModal() {
+        document.getElementById("logoUploadModal").classList.add("show");
+        if (customLogoImage) {
+          document.getElementById("logoPreview").src = customLogoImage;
+          document.getElementById("logoPreview").style.display = "block";
+          document.getElementById("noLogoText").style.display = "none";
+          document.getElementById("clearLogoBtn").style.display = "block";
+          document.getElementById("logoUploadPrompt").style.display = "none";
+        } else {
+          document.getElementById("logoPreview").style.display = "none";
+          document.getElementById("noLogoText").style.display = "block";
+          document.getElementById("clearLogoBtn").style.display = "none";
+          document.getElementById("logoUploadPrompt").style.display = "block";
+        }
+      }
+
+      function closeLogoUploadModal() {
+        document.getElementById("logoUploadModal").classList.remove("show");
+      }
+
+      // Setup Logo upload area
+      document.addEventListener("DOMContentLoaded", function () {
+        const logoUploadArea = document.getElementById("logoUploadArea");
+        const logoUpload = document.getElementById("logoUpload");
+
+        // Click to upload
+        logoUploadArea.addEventListener("click", function () {
+          logoUpload.click();
+        });
+
+        // Drag and drop
+        logoUploadArea.addEventListener("dragover", function (e) {
+          e.preventDefault();
+          logoUploadArea.classList.add("dragover");
+        });
+
+        logoUploadArea.addEventListener("dragleave", function () {
+          logoUploadArea.classList.remove("dragover");
+        });
+
+        logoUploadArea.addEventListener("drop", function (e) {
+          e.preventDefault();
+          logoUploadArea.classList.remove("dragover");
+
+          if (e.dataTransfer.files.length) {
+            logoUpload.files = e.dataTransfer.files;
+            handleLogoUpload();
+          }
+        });
+
+        // File input change
+        logoUpload.addEventListener("change", handleLogoUpload);
+      });
+
+      function handleLogoUpload() {
+        const file = document.getElementById("logoUpload").files[0];
+        if (file) {
+          // Check file size (limit to 2MB)
+          if (file.size > 2 * 1024 * 1024) {
+            showToast("Ukuran file terlalu besar. Maksimal 2MB.", "error");
+            return;
+          }
+
+          // Check file type
+          if (!file.type.match("image.*")) {
+            showToast("Format file tidak valid. Harus berupa gambar.", "error");
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            customLogoImage = event.target.result;
+            localStorage.setItem("customLogoImage", customLogoImage);
+            document.getElementById("logoImage").src = customLogoImage;
+            document.getElementById("logoPreview").src = customLogoImage;
+            document.getElementById("logoPreview").style.display = "block";
+            document.getElementById("noLogoText").style.display = "none";
+            document.getElementById("clearLogoBtn").style.display = "block";
+            document.getElementById("logoUploadPrompt").style.display = "none";
+            showToast("Logo berhasil diunggah", "success");
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function clearLogo() {
+        customLogoImage = null;
+        localStorage.removeItem("customLogoImage");
+        document.getElementById("logoImage").src =
+          "https://via.placeholder.com/80";
+        document.getElementById("logoPreview").style.display = "none";
+        document.getElementById("noLogoText").style.display = "block";
+        document.getElementById("clearLogoBtn").style.display = "none";
+        document.getElementById("logoUploadPrompt").style.display = "block";
+        showToast("Logo berhasil dihapus", "success");
+      }
+
+      // Menu Image Management
+      function openMenuImageUploadModal(itemId) {
+        currentMenuImageId = itemId;
+        const item = menuItems.find((i) => i.id === itemId);
+        document.getElementById("menuImageName").textContent = item.name;
+        document.getElementById("menuImageUploadModal").classList.add("show");
+
+        // Show current image if exists
+        if (item.image !== "https://via.placeholder.com/300") {
+          document.getElementById("menuImagePreview").src = item.image;
+          document.getElementById("menuImagePreview").style.display = "block";
+          document.getElementById("noMenuImageText").style.display = "none";
+          document.getElementById("clearMenuImageBtn").style.display = "block";
+          document.getElementById("menuImageUploadPrompt").style.display =
+            "none";
+        } else {
+          document.getElementById("menuImagePreview").style.display = "none";
+          document.getElementById("noMenuImageText").style.display = "block";
+          document.getElementById("clearMenuImageBtn").style.display = "none";
+          document.getElementById("menuImageUploadPrompt").style.display =
+            "block";
+        }
+      }
+
+      function closeMenuImageUploadModal() {
+        document
+          .getElementById("menuImageUploadModal")
+          .classList.remove("show");
+        currentMenuImageId = null;
+      }
+
+      // Setup Menu Image upload area
+      document.addEventListener("DOMContentLoaded", function () {
+        const menuImageUploadArea = document.getElementById(
+          "menuImageUploadArea"
+        );
+        const menuImageUpload = document.getElementById("menuImageUpload");
+
+        // Click to upload
+        menuImageUploadArea.addEventListener("click", function () {
+          menuImageUpload.click();
+        });
+
+        // Drag and drop
+        menuImageUploadArea.addEventListener("dragover", function (e) {
+          e.preventDefault();
+          menuImageUploadArea.classList.add("dragover");
+        });
+
+        menuImageUploadArea.addEventListener("dragleave", function () {
+          menuImageUploadArea.classList.remove("dragover");
+        });
+
+        menuImageUploadArea.addEventListener("drop", function (e) {
+          e.preventDefault();
+          menuImageUploadArea.classList.remove("dragover");
+
+          if (e.dataTransfer.files.length) {
+            menuImageUpload.files = e.dataTransfer.files;
+            handleMenuImageUpload();
+          }
+        });
+
+        // File input change
+        menuImageUpload.addEventListener("change", handleMenuImageUpload);
+      });
+
+      function handleMenuImageUpload() {
+        const file = document.getElementById("menuImageUpload").files[0];
+        if (file) {
+          // Check file size (limit to 2MB)
+          if (file.size > 2 * 1024 * 1024) {
+            showToast("Ukuran file terlalu besar. Maksimal 2MB.", "error");
+            return;
+          }
+
+          // Check file type
+          if (!file.type.match("image.*")) {
+            showToast("Format file tidak valid. Harus berupa gambar.", "error");
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            document.getElementById("menuImagePreview").src =
+              event.target.result;
+            document.getElementById("menuImagePreview").style.display = "block";
+            document.getElementById("noMenuImageText").style.display = "none";
+            document.getElementById("clearMenuImageBtn").style.display =
+              "block";
+            document.getElementById("menuImageUploadPrompt").style.display =
+              "none";
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function saveMenuImage() {
+        if (currentMenuImageId) {
+          const newImage = document.getElementById("menuImagePreview").src;
+          const itemIndex = menuItems.findIndex(
+            (item) => item.id === currentMenuImageId
+          );
+          if (itemIndex !== -1) {
+            menuItems[itemIndex].image = newImage;
+            saveMenuItems();
+            renderMenu();
+            closeMenuImageUploadModal();
+            showToast("Gambar menu berhasil disimpan", "success");
+          }
+        }
+      }
+
+      function clearMenuImage() {
+        if (currentMenuImageId) {
+          const itemIndex = menuItems.findIndex(
+            (item) => item.id === currentMenuImageId
+          );
+          if (itemIndex !== -1) {
+            menuItems[itemIndex].image = "https://via.placeholder.com/300";
+            saveMenuItems();
+            document.getElementById("menuImagePreview").style.display = "none";
+            document.getElementById("noMenuImageText").style.display = "block";
+            document.getElementById("clearMenuImageBtn").style.display = "none";
+            document.getElementById("menuImageUploadPrompt").style.display =
+              "block";
+            renderMenu();
+            showToast("Gambar menu berhasil dihapus", "success");
+          }
+        }
+      }
+
+      // Menu Form Management (Add/Edit)
+      function showAddForm(type) {
+        currentEditingMenuItem = null;
+        document.getElementById("menuFormTitle").textContent = "Tambah Menu";
+        document.getElementById("menuNameInput").value = "";
+        document.getElementById("menuCategoryInput").value =
+          "Kopi Espresso-Based";
+        document.getElementById("menuDescriptionInput").value = "";
+        document.getElementById("menuPriceInput").value = "";
+        document.getElementById("menuTypeInput").value = type;
+        document.getElementById("menuFormError").style.display = "none";
+        document.getElementById("menuFormModal").classList.add("show");
+      }
+
+      function editMenuItem(id) {
+        const item = menuItems.find((i) => i.id === id);
+        if (item) {
+          currentEditingMenuItem = item;
+          document.getElementById("menuFormTitle").textContent = "Edit Menu";
+          document.getElementById("menuNameInput").value = item.name;
+          document.getElementById("menuCategoryInput").value = item.category;
+          document.getElementById("menuDescriptionInput").value =
+            item.description;
+          document.getElementById("menuPriceInput").value = item.price;
+          document.getElementById("menuTypeInput").value = item.type;
+          document.getElementById("menuFormError").style.display = "none";
+          document.getElementById("menuFormModal").classList.add("show");
+        }
+      }
+
+      function closeMenuFormModal() {
+        document.getElementById("menuFormModal").classList.remove("show");
+        currentEditingMenuItem = null;
+      }
+
+      function saveMenuItem() {
+        const name = document.getElementById("menuNameInput").value.trim();
+        const category = document.getElementById("menuCategoryInput").value;
+        const description = document
+          .getElementById("menuDescriptionInput")
+          .value.trim();
+        const price = parseInt(document.getElementById("menuPriceInput").value);
+        const type = document.getElementById("menuTypeInput").value;
+
+        // Validation
+        if (!name || !category || !description || isNaN(price) || price <= 0) {
+          document.getElementById("menuFormError").style.display = "block";
+          return;
+        }
+
+        if (currentEditingMenuItem) {
+          // Edit existing item
+          const itemIndex = menuItems.findIndex(
+            (item) => item.id === currentEditingMenuItem.id
+          );
+          if (itemIndex !== -1) {
+            menuItems[itemIndex] = {
+              ...menuItems[itemIndex],
+              name,
+              category,
+              description,
+              price,
+              type,
+            };
+            showToast("Menu berhasil diperbarui", "success");
+          }
+        } else {
+          // Add new item
+          const newItem = {
+            id: Date.now(),
+            name,
+            category,
+            description,
+            price,
+            type,
+            image: "https://via.placeholder.com/300",
+          };
+          menuItems.push(newItem);
+          showToast("Menu berhasil ditambahkan", "success");
+        }
+
+        saveMenuItems();
+        renderMenu();
+        closeMenuFormModal();
+      }
+
+      function deleteMenuItem(id) {
+        if (confirm("Apakah Anda yakin ingin menghapus menu ini?")) {
+          menuItems = menuItems.filter((item) => item.id !== id);
+          saveMenuItems();
+          renderMenu();
+          showToast("Menu berhasil dihapus", "success");
+        }
+      }
+
+      // QR Management
+      function openQrManagementModal() {
+        document.getElementById("qrModal").classList.add("show");
+        if (customQrImage) {
+          document.getElementById("qrPreview").src = customQrImage;
+          document.getElementById("qrPreview").style.display = "block";
+          document.getElementById("noQrText").style.display = "none";
+          document.getElementById("clearQrBtn").style.display = "block";
+          document.getElementById("uploadPrompt").style.display = "none";
+        } else {
+          document.getElementById("qrPreview").style.display = "none";
+          document.getElementById("noQrText").style.display = "block";
+          document.getElementById("clearQrBtn").style.display = "none";
+          document.getElementById("uploadPrompt").style.display = "block";
+        }
+      }
+
+      function closeQrModal() {
+        document.getElementById("qrModal").classList.remove("show");
+      }
+
+      // Setup QR upload area
+      document.addEventListener("DOMContentLoaded", function () {
+        const qrUploadArea = document.getElementById("qrUploadArea");
+        const qrUpload = document.getElementById("qrUpload");
+
+        // Click to upload
+        qrUploadArea.addEventListener("click", function () {
+          qrUpload.click();
+        });
+
+        // Drag and drop
+        qrUploadArea.addEventListener("dragover", function (e) {
+          e.preventDefault();
+          qrUploadArea.classList.add("dragover");
+        });
+
+        qrUploadArea.addEventListener("dragleave", function () {
+          qrUploadArea.classList.remove("dragover");
+        });
+
+        qrUploadArea.addEventListener("drop", function (e) {
+          e.preventDefault();
+          qrUploadArea.classList.remove("dragover");
+
+          if (e.dataTransfer.files.length) {
+            qrUpload.files = e.dataTransfer.files;
+            handleQrUpload();
+          }
+        });
+
+        // File input change
+        qrUpload.addEventListener("change", handleQrUpload);
+      });
+
+      function handleQrUpload() {
+        const file = document.getElementById("qrUpload").files[0];
+        if (file) {
+          // Check file size (limit to 2MB)
+          if (file.size > 2 * 1024 * 1024) {
+            showToast("Ukuran file terlalu besar. Maksimal 2MB.", "error");
+            return;
+          }
+
+          // Check file type
+          if (!file.type.match("image.*")) {
+            showToast("Format file tidak valid. Harus berupa gambar.", "error");
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            customQrImage = event.target.result;
+            localStorage.setItem("customQrImage", customQrImage);
+            document.getElementById("qrPreview").src = customQrImage;
+            document.getElementById("qrPreview").style.display = "block";
+            document.getElementById("noQrText").style.display = "none";
+            document.getElementById("clearQrBtn").style.display = "block";
+            document.getElementById("uploadPrompt").style.display = "none";
+            showToast("QRIS berhasil diunggah", "success");
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function clearQrCode() {
+        customQrImage = null;
+        localStorage.removeItem("customQrImage");
+        document.getElementById("qrPreview").style.display = "none";
+        document.getElementById("noQrText").style.display = "block";
+        document.getElementById("clearQrBtn").style.display = "none";
+        document.getElementById("uploadPrompt").style.display = "block";
+        showToast("QRIS berhasil dihapus", "success");
+      }
+
+      function showPaymentQR(orderId) {
+        if (!customQrImage) {
+          showToast("Unggah QRIS pembayaran terlebih dahulu", "error");
+          return;
+        }
+
+        const order = completedOrders.find((o) => o.id === orderId);
+        if (order) {
+          currentPaymentOrderId = orderId;
+          document.getElementById("paymentQrImage").src = customQrImage;
+          document.getElementById(
+            "paymentAmount"
+          ).textContent = `Rp ${order.total.toLocaleString("id-ID")}`;
+          document.getElementById(
+            "paymentTable"
+          ).textContent = `Meja ${order.table}`;
+          document.getElementById("paymentQrModal").classList.add("show");
+        }
+      }
+
+      function closePaymentQrModal() {
+        document.getElementById("paymentQrModal").classList.remove("show");
+        currentPaymentOrderId = null;
+      }
+
+      function confirmPayment() {
+        if (currentPaymentOrderId) {
+          markAsPaid(currentPaymentOrderId);
+          // Auto print setelah pembayaran dikonfirmasi
+          printReceipt(currentPaymentOrderId);
+          closePaymentQrModal();
+        }
+      }
+
+      function markAsPaid(orderId) {
+        const orderIndex = completedOrders.findIndex((o) => o.id === orderId);
+        if (orderIndex !== -1) {
+          completedOrders[orderIndex].paid = true;
+          saveOrders();
+          renderCompletedOrders();
+          renderRecapOrders();
+          showToast("Pembayaran berhasil dikonfirmasi", "success");
+        }
+      }
+
+      // Download functions
+      function openDailyDownloadModal() {
+        const selectedDate = document.getElementById("recapDate").value;
+        if (!selectedDate) {
+          showToast("Pilih tanggal terlebih dahulu", "error");
+          return;
+        }
+        document.getElementById("downloadDate").textContent = selectedDate;
+        document.getElementById("downloadModal").classList.add("show");
+      }
+
+      function closeDownloadModal() {
+        document.getElementById("downloadModal").classList.remove("show");
+      }
+
+      function downloadDailyRecap(format) {
+        const selectedDate = document.getElementById("recapDate").value;
+        const dailyOrders = completedOrders.filter(
+          (order) => order.date === selectedDate
+        );
+        if (dailyOrders.length === 0) {
+          showToast("Tidak ada data untuk diunduh", "error");
+          return;
+        }
+        let content, filename, mimeType;
+        if (format === "json") {
+          content = JSON.stringify(dailyOrders, null, 2);
+          filename = `rekap_${selectedDate}.json`;
+          mimeType = "application/json";
+        } else if (format === "csv") {
+          const headers = [
+            "Tanggal",
+            "Meja",
+            "Menu",
+            "Jumlah",
+            "Harga",
+            "Total",
+            "Status",
+          ];
+          let rows = [headers.join(",")];
+          dailyOrders.forEach((order) => {
+            order.items.forEach((item) => {
+              rows.push(
+                [
+                  `"${order.timestamp}"`,
+                  `"${order.table}"`,
+                  `"${item.name}"`,
+                  item.quantity,
+                  item.price,
+                  item.price * item.quantity,
+                  `"${order.paid ? "Sudah Dibayar" : "Belum Dibayar"}"`,
+                ].join(",")
+              );
+            });
+          });
+          content = rows.join("\n");
+          filename = `rekap_${selectedDate}.csv`;
+          mimeType = "text/csv";
+        } else if (format === "excel") {
+          // Simple Excel format (HTML table that can be opened in Excel)
+          let table = '<table border="1">';
+          table +=
+            "<tr><th>Tanggal</th><th>Meja</th><th>Menu</th><th>Jumlah</th><th>Harga</th><th>Total</th><th>Status</th></tr>";
+          dailyOrders.forEach((order) => {
+            order.items.forEach((item) => {
+              table += `<tr>
+                <td>${order.timestamp}</td>
+                <td>${order.table}</td>
+                <td>${item.name}</td>
+                <td>${item.quantity}</td>
+                <td>${item.price}</td>
+                <td>${item.price * item.quantity}</td>
+                <td>${order.paid ? "Sudah Dibayar" : "Belum Dibayar"}</td>
+              </tr>`;
+            });
+          });
+          table += "</table>";
+          content = table;
+          filename = `rekap_${selectedDate}.xls`;
+          mimeType = "application/vnd.ms-excel";
+        }
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast(
+          `Rekap berhasil diunduh (${format.toUpperCase()})`,
+          "success"
+        );
+        closeDownloadModal();
+      }
+
+      // Local storage
+      function saveOrders() {
+        localStorage.setItem(
+          "warkobeng_orders",
+          JSON.stringify(completedOrders)
+        );
+      }
+
+      function loadOrders() {
+        const saved = localStorage.getItem("warkobeng_orders");
+        if (saved) {
+          completedOrders = JSON.parse(saved);
+        }
+      }
+
+      function saveMenuItems() {
+        localStorage.setItem("warkobeng_menuItems", JSON.stringify(menuItems));
+      }
+
+      function loadMenuItems() {
+        const saved = localStorage.getItem("warkobeng_menuItems");
+        if (saved) {
+          menuItems = JSON.parse(saved);
+        }
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", () => {
+        loadOrders();
+        loadMenuItems();
+
+        // Load custom logo if exists
+        if (customLogoImage) {
+          document.getElementById("logoImage").src = customLogoImage;
+        }
+
+        renderMenu();
+        // Set today's date as default
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("recapDate").value = today;
+        // Initialize tab
+        showTab("menu");
+
+        // Hide settings buttons by default
+        document.getElementById("manageQrBtn").style.display = "none";
+        document.getElementById("changePasswordBtn").style.display = "none";
+        document.getElementById("clearOrderBtn").style.display = "none";
+        document.getElementById("downloadBtn").style.display = "none";
+        document.getElementById("logoUploadBtn").style.display = "none";
+      });
+    </script>
+  </body>
+</html>
