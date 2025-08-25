@@ -820,9 +820,17 @@
         </div>
         <!-- Results Tab -->
         <div id="resultsTab" class="tab-content hidden">
-          <h3 class="text-2xl font-bold text-amber-900 mb-6">
-            Riwayat Pesanan
-          </h3>
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-amber-900">Riwayat Pesanan</h3>
+            <button
+              onclick="clearOrderHistory()"
+              id="clearHistoryBtn"
+              class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300"
+              style="display: none"
+            >
+              <i class="fas fa-trash mr-2"></i>Bersihkan Riwayat
+            </button>
+          </div>
           <div
             id="completedOrders"
             class="grid grid-cols-1 md:grid-cols-2 gap-6"
@@ -1800,6 +1808,8 @@
           : "none";
         document.getElementById("logoUploadBtn").style.display =
           isSettingsActive ? "block" : "none";
+        document.getElementById("clearHistoryBtn").style.display =
+          isSettingsActive ? "block" : "none";
         // Show/hide add item buttons
         document.querySelectorAll(".add-item-btn").forEach((btn) => {
           btn.style.display = isSettingsActive ? "block" : "none";
@@ -2378,6 +2388,25 @@
         currentOrder = [];
         renderOrderList();
         showToast("Pesanan dibersihkan", "success");
+      }
+      // Fungsi untuk membersihkan riwayat pesanan
+      function clearOrderHistory() {
+        if (completedOrders.length === 0) {
+          showToast("Tidak ada riwayat pesanan untuk dibersihkan", "info");
+          return;
+        }
+        
+        // Tambahkan konfirmasi dialog
+        const confirmMessage = `Apakah Anda yakin ingin menghapus semua riwayat pesanan? (${completedOrders.length} pesanan akan dihapus permanen)`;
+        
+        if (confirm(confirmMessage)) {
+          // Hapus semua riwayat pesanan
+          completedOrders = [];
+          saveOrders();
+          renderCompletedOrders();
+          renderRecapOrders();
+          showToast("Semua riwayat pesanan berhasil dihapus", "success");
+        }
       }
       // Completed orders
       function renderCompletedOrders() {
@@ -3189,6 +3218,7 @@
         document.getElementById("clearOrderBtn").style.display = "none";
         document.getElementById("downloadBtn").style.display = "none";
         document.getElementById("logoUploadBtn").style.display = "none";
+        document.getElementById("clearHistoryBtn").style.display = "none";
       });
     </script>
   </body>
