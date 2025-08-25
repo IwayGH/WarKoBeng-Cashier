@@ -2054,23 +2054,435 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(`${item.name} dihapus dari pesanan`, "info");
       }
 
-      function calculateTotal() {
-        const subtotal = currentOrder.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0
-        );
-        const tax = subtotal * 0.1;
-        const total = subtotal + tax;
-        document.getElementById(
-          "subtotal"
-        ).textContent = `Rp ${subtotal.toLocaleString("id-ID")}`;
-        document.getElementById("tax").textContent = `Rp ${tax.toLocaleString(
-          "id-ID"
-        )}`;
-        document.getElementById(
-          "grandTotal"
-        ).textContent = `Rp ${total.toLocaleString("id-ID")}`;
-      }
+      // Modifikasi fungsi calculateTotal
+function calculateTotal() {
+  const subtotal = currentOrder.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // Hapus pajak 10%
+  // const tax = subtotal * 0.1;
+  // const total = subtotal + tax;
+  const total = subtotal; // Total sama dengan subtotal karena sudah termasuk pajak
+  
+  document.getElementById("subtotal").textContent = `Rp ${subtotal.toLocaleString("id-ID")}`;
+  // Sembunyikan baris pajak
+  document.getElementById("tax").parentElement.style.display = "none";
+  document.getElementById("grandTotal").textContent = `Rp ${total.toLocaleString("id-ID")}`;
+}
+
+// Modifikasi fungsi printReceipt
+function printReceipt(orderId) {
+  const order = completedOrders.find(o => o.id === orderId);
+  if (!order) return;
+  
+  const printWindow = window.open('', '_blank');
+  
+  const receiptHTML = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Struk Pembayaran - WarKoBeng</title>
+      <style>
+        @page {
+          size: 80mm auto;
+          margin: 5mm;
+        }
+        body {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          line-height: 1.4;
+          margin: 0;
+          padding: 10px;
+        }
+        .header {
+          text-align: center;
+          margin-bottom: 15px;
+        }
+        .title {
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+        .subtitle {
+          font-size: 12px;
+          margin-bottom: 10px;
+        }
+        .divider {
+          border-top: 1px dashed #000;
+          margin: 10px 0;
+        }
+        .info-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 5px;
+        }
+        .items {
+          margin: 10px 0;
+        }
+        .item-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 3px;
+        }
+        .total-section {
+          margin-top: 15px;
+        }
+        .total-row {
+          display: flex;
+          justify-content: space-between;
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+        .footer {
+          text-align: center;
+          margin-top: 20px;
+          font-size: 10px;
+        }
+        .paid-status {
+          text-align: center;
+          font-weight: bold;
+          font-size: 14px;
+          margin: 15px 0;
+          padding: 5px;
+          border: 1px solid #000;
+          background-color: #d4edda;
+          color: #155724;
+        }
+        @media print {
+          body {
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <div class="title">WARKOBENG</div>
+        <div class="subtitle">Warung Kopi Bengkel</div>
+        <div class="subtitle">Tempat Nyaman untuk Kopi dan Obrolan Hangat</div>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <div class="info-row">
+        <span>Tanggal:</span>
+        <span>${order.date}</span>
+      </div>
+      <div class="info-row">
+        <span>Waktu:</span>
+        <span>${order.timestamp.split(', ')[1]}</span>
+      </div>
+      <div class="info-row">
+        <span>Meja:</span>
+        <span>${order.table}</span>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <div class="items">
+        ${order.items.map(item => `
+          <div class="item-row">
+            <span>${item.name} x ${item.quantity}</span>
+            <span>Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</span>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div class="divider"></div>
+      
+      <div class="total-section">
+        <div class="total-row">
+          <span>TOTAL:</span>
+          <span>Rp ${order.total.toLocaleString('id-ID')}</span>
+        </div>
+      </div>
+      
+      <div class="paid-status">
+        ✓ SUDAH DIBAYAR
+      </div>
+      
+      <div class="divider"></div>
+      
+      <div class="footer">
+        <div>Terima kasih atas kunjungan Anda</div>
+        <div>WarKoBeng - Warung Kopi Bengkel</div>
+      </div>
+    </body>
+    </html>
+  `;
+  
+  printWindow.document.write(receiptHTML);
+  printWindow.document.close();
+  
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  }, 500);
+  
+  showToast("Struk pembayaran sedang dicetak", "info");
+}
+
+// Modifikasi fungsi printPaymentProof
+function printPaymentProof() {
+  if (!currentPaymentOrderId) return;
+  
+  const order = completedOrders.find(o => o.id === currentPaymentOrderId);
+  if (!order) return;
+  
+  const printWindow = window.open('', '_blank');
+  
+  const receiptHTML = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Bukti Pembayaran - WarKoBeng</title>
+      <style>
+        @page {
+          size: 80mm auto;
+          margin: 5mm;
+        }
+        body {
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          line-height: 1.4;
+          margin: 0;
+          padding: 10px;
+        }
+        .header {
+          text-align: center;
+          margin-bottom: 15px;
+        }
+        .title {
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+        .subtitle {
+          font-size: 12px;
+          margin-bottom: 10px;
+        }
+        .divider {
+          border-top: 1px dashed #000;
+          margin: 10px 0;
+        }
+        .info-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 5px;
+        }
+        .items {
+          margin: 10px 0;
+        }
+        .item-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 3px;
+        }
+        .total-section {
+          margin-top: 15px;
+        }
+        .total-row {
+          display: flex;
+          justify-content: space-between;
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+        .footer {
+          text-align: center;
+          margin-top: 20px;
+          font-size: 10px;
+        }
+        .payment-status {
+          text-align: center;
+          font-weight: bold;
+          font-size: 14px;
+          margin: 15px 0;
+          padding: 5px;
+          border: 1px solid #000;
+          background-color: #fff3cd;
+          color: #856404;
+        }
+        .qr-section {
+          text-align: center;
+          margin: 15px 0;
+        }
+        .qr-code {
+          width: 150px;
+          height: 150px;
+          margin: 0 auto;
+          border: 1px solid #ddd;
+        }
+        @media print {
+          body {
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <div class="title">WARKOBENG</div>
+        <div class="subtitle">Warung Kopi Bengkel</div>
+        <div class="subtitle">Tempat Nyaman untuk Kopi dan Obrolan Hangat</div>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <div class="info-row">
+        <span>Tanggal:</span>
+        <span>${order.date}</span>
+      </div>
+      <div class="info-row">
+        <span>Waktu:</span>
+        <span>${order.timestamp.split(', ')[1]}</span>
+      </div>
+      <div class="info-row">
+        <span>Meja:</span>
+        <span>${order.table}</span>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <div class="items">
+        ${order.items.map(item => `
+          <div class="item-row">
+            <span>${item.name} x ${item.quantity}</span>
+            <span>Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</span>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div class="divider"></div>
+      
+      <div class="total-section">
+        <div class="total-row">
+          <span>TOTAL:</span>
+          <span>Rp ${order.total.toLocaleString('id-ID')}</span>
+        </div>
+      </div>
+      
+      <div class="payment-status">
+        ⏳ MENUNGGU PEMBAYARAN
+      </div>
+      
+      <div class="qr-section">
+        <p class="text-sm mb-2">Scan QRIS untuk pembayaran:</p>
+        <img src="${customQrImage}" alt="QRIS Payment" class="qr-code">
+      </div>
+      
+      <div class="divider"></div>
+      
+      <div class="footer">
+        <div>Terima kasih atas kunjungan Anda</div>
+        <div>WarKoBeng - Warung Kopi Bengkel</div>
+      </div>
+    </body>
+    </html>
+  `;
+  
+  printWindow.document.write(receiptHTML);
+  printWindow.document.close();
+  
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  }, 500);
+  
+  showToast("Bukti pembayaran sedang dicetak", "info");
+}
+
+// Modifikasi fungsi completeOrder
+function completeOrder() {
+  const tableNumber = document.getElementById("tableNumber").value.trim();
+  if (currentOrder.length === 0) {
+    showToast("Tidak ada pesanan untuk diselesaikan", "error");
+    return;
+  }
+  if (!tableNumber) {
+    showToast("Masukkan nomor meja", "error");
+    return;
+  }
+  const existingOrder = completedOrders.find((order) => order.table === tableNumber && !order.paid);
+  if (existingOrder) {
+    showToast(`Meja ${tableNumber} masih ada pesanan yang belum dibayar`, "error");
+    return;
+  }
+  // Hapus perhitungan pajak
+  const total = parseFloat(document.getElementById("grandTotal").textContent.replace("Rp ", "").replace(/\./g, ""));
+  // const total = parseFloat(document.getElementById("grandTotal").textContent.replace("Rp ", "").replace(/\./g, "")) * 0.9; // Kalkulasi lama dengan pajak
+  
+  const newOrder = {
+    id: Date.now(),
+    timestamp: new Date().toLocaleString("id-ID"),
+    date: new Date().toISOString().split("T")[0],
+    table: tableNumber,
+    items: [...currentOrder],
+    total: total,
+    paid: false,
+  };
+  completedOrders.push(newOrder);
+  saveOrders();
+  currentOrder = [];
+  document.getElementById("tableNumber").value = "";
+  renderOrderList();
+  showToast("Pesanan berhasil dibuat", "success");
+  showTab("results");
+}
+
+// Modifikasi formatReceiptForPrinter untuk menghapus pajak
+function formatReceiptForPrinter(order, isPaid) {
+  let receipt = "\n";
+  
+  // Header
+  receipt += "================================\n";
+  receipt += "           WARKOBENG\n";
+  receipt += "    Warung Kopi Bengkel\n";
+  receipt += "Tempat Nyaman untuk Kopi\n";
+  receipt += "    dan Obrolan Hangat\n";
+  receipt += "================================\n\n";
+  
+  // Info transaksi
+  receipt += `Tanggal: ${order.date}\n`;
+  receipt += `Waktu: ${order.timestamp.split(', ')[1]}\n`;
+  receipt += `Meja: ${order.table}\n`;
+  receipt += "--------------------------------\n\n";
+  
+  // Detail items
+  receipt += "ITEM                   QTY   TOTAL\n";
+  receipt += "--------------------------------\n";
+  
+  order.items.forEach(item => {
+    const itemName = item.name.padEnd(20, ' ');
+    const qty = item.quantity.toString().padStart(3, ' ');
+    const total = `Rp ${(item.price * item.quantity).toLocaleString('id-ID')}`;
+    receipt += `${itemName} ${qty} ${total}\n`;
+  });
+  
+  receipt += "--------------------------------\n";
+  
+  // Total tanpa pajak
+  receipt += `TOTAL: Rp ${order.total.toLocaleString('id-ID')}\n`;
+  receipt += "================================\n";
+  
+  // Status pembayaran
+  if (isPaid) {
+    receipt += "          SUDAH DIBAYAR\n";
+  } else {
+    receipt += "       MENUNGGU PEMBAYARAN\n";
+    receipt += "================================\n";
+    receipt += "Scan QRIS untuk pembayaran:\n\n";
+    receipt += "[QR CODE AREA - SCAN DISINI]\n";
+  }
+  
+  receipt += "================================\n";
+  receipt += "Terima kasih atas kunjungan Anda\n";
+  receipt += "WarKoBeng - Warung Kopi Bengkel\n\n";
+  
+  // Cut command untuk printer thermal
+  receipt += "\x1D\x56\x00"; // Paper cut
+  
+  return receipt;
+}
 
       function clearOrder() {
         if (currentOrder.length === 0) {
