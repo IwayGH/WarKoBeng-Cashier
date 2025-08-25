@@ -6,16 +6,19 @@
     <title>WarKoBeng - Warung Kopi Bengkel</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>// Cek apakah aplikasi berjalan online
-const isOnline = window.location.hostname !== 'localhost' && 
-                 window.location.hostname !== '127.0.0.1';
+    <script>
+      // Cek apakah aplikasi berjalan online
+      const isOnline =
+        window.location.hostname !== "localhost" &&
+        window.location.hostname !== "127.0.0.1";
 
-// Tampilkan notasi untuk pengguna online
-if (isOnline) {
-  // Tambahkan banner informasi
-  const onlineBanner = document.createElement('div');
-  onlineBanner.className = 'bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4';
-  onlineBanner.innerHTML = `
+      // Tampilkan notasi untuk pengguna online
+      if (isOnline) {
+        // Tambahkan banner informasi
+        const onlineBanner = document.createElement("div");
+        onlineBanner.className =
+          "bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4";
+        onlineBanner.innerHTML = `
     <div class="flex">
       <div class="py-1">
         <i class="fas fa-info-circle mr-2"></i>
@@ -26,13 +29,14 @@ if (isOnline) {
       </div>
     </div>
   `;
-  
-  // Sisipkan setelah header
-  const header = document.querySelector('.sticky-header');
-  if (header) {
-    header.parentNode.insertBefore(onlineBanner, header.nextSibling);
-  }
-}</script>
+
+        // Sisipkan setelah header
+        const header = document.querySelector(".sticky-header");
+        if (header) {
+          header.parentNode.insertBefore(onlineBanner, header.nextSibling);
+        }
+      }
+    </script>
     <!-- Font Awesome for icons -->
     <link
       rel="stylesheet"
@@ -793,11 +797,11 @@ if (isOnline) {
               <p class="text-lg">
                 Subtotal:
                 <span id="subtotal" class="font-bold text-amber-900">Rp 0</span>
-              </p><!--
+              </p>
               <p class="text-lg">
                 Pajak (10%):
                 <span id="tax" class="font-bold text-amber-900">Rp 0</span>
-              </p>-->
+              </p>
               <p class="text-2xl font-extrabold mt-4">
                 Total: <span id="grandTotal" class="text-amber-700">Rp 0</span>
               </p>
@@ -1556,140 +1560,151 @@ if (isOnline) {
         }, 3000);
       }
       // Tambahkan di bagian pengaturan
-function addBackupRestoreButtons() {
-  const settingsBtn = document.getElementById('settingsBtn');
-  
-  // Container untuk tombol backup/restore
-  const backupContainer = document.createElement('div');
-  backupContainer.className = 'flex space-x-2 mt-2';
-  backupContainer.id = 'backupContainer';
-  backupContainer.style.display = 'none';
-  
-  // Tombol Backup
-  const backupBtn = document.createElement('button');
-  backupBtn.className = 'bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300';
-  backupBtn.innerHTML = '<i class="fas fa-download mr-2"></i>Backup Data';
-  backupBtn.onclick = backupData;
-  
-  // Tombol Restore
-  const restoreBtn = document.createElement('button');
-  restoreBtn.className = 'bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300';
-  restoreBtn.innerHTML = '<i class="fas fa-upload mr-2"></i>Restore Data';
-  restoreBtn.onclick = restoreData;
-  
-  // File input untuk restore
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.accept = '.json';
-  fileInput.style.display = 'none';
-  fileInput.id = 'restoreFileInput';
-  fileInput.onchange = handleRestoreFile;
-  
-  backupContainer.appendChild(backupBtn);
-  backupContainer.appendChild(restoreBtn);
-  backupContainer.appendChild(fileInput);
-  
-  settingsBtn.parentNode.insertBefore(backupContainer, settingsBtn.nextSibling);
-  
-  // Update visibility
-  const updateBackupVisibility = () => {
-    backupContainer.style.display = isSettingsActive ? 'flex' : 'none';
-  };
-  
-  // Modifikasi toggleSettingsMode
-  const originalToggleSettingsMode = toggleSettingsMode;
-  toggleSettingsMode = function() {
-    originalToggleSettingsMode();
-    updateBackupVisibility();
-  };
-}
+      function addBackupRestoreButtons() {
+        const settingsBtn = document.getElementById("settingsBtn");
 
-// Fungsi backup data
-function backupData() {
-  const data = {
-    menuItems: menuItems,
-    completedOrders: completedOrders,
-    customQrImage: customQrImage,
-    customLogoImage: customLogoImage,
-    correctPassword: correctPassword,
-    backupDate: new Date().toISOString()
-  };
-  
-  const dataStr = JSON.stringify(data, null, 2);
-  const dataBlob = new Blob([dataStr], { type: 'application/json' });
-  
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(dataBlob);
-  link.download = `warkobeng_backup_${new Date().toISOString().split('T')[0]}.json`;
-  link.click();
-  
-  showToast("Data berhasil di-backup", "success");
-}
+        // Container untuk tombol backup/restore
+        const backupContainer = document.createElement("div");
+        backupContainer.className = "flex space-x-2 mt-2";
+        backupContainer.id = "backupContainer";
+        backupContainer.style.display = "none";
 
-// Fungsi restore data
-function restoreData() {
-  document.getElementById('restoreFileInput').click();
-}
+        // Tombol Backup
+        const backupBtn = document.createElement("button");
+        backupBtn.className =
+          "bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300";
+        backupBtn.innerHTML = '<i class="fas fa-download mr-2"></i>Backup Data';
+        backupBtn.onclick = backupData;
 
-// Handle file restore
-function handleRestoreFile(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const data = JSON.parse(e.target.result);
-      
-      // Validasi data
-      if (data.menuItems && data.completedOrders) {
-        // Konfirmasi restore
-        if (confirm("Apakah Anda yakin ingin me-restore data? Data saat ini akan ditimpa.")) {
-          // Restore data
-          menuItems = data.menuItems || [];
-          completedOrders = data.completedOrders || [];
-          customQrImage = data.customQrImage || null;
-          customLogoImage = data.customLogoImage || null;
-          correctPassword = data.correctPassword || "AnisaWTNT";
-          
-          // Save to localStorage
-          saveMenuItems();
-          saveOrders();
-          localStorage.setItem("customQrImage", customQrImage);
-          localStorage.setItem("customLogoImage", customLogoImage);
-          localStorage.setItem("warkobeng_password", correctPassword);
-          
-          // Reload UI
-          renderMenu();
-          renderCompletedOrders();
-          
-          // Update logo jika ada
-          if (customLogoImage) {
-            document.getElementById("logoImage").src = customLogoImage;
-          }
-          
-          showToast("Data berhasil di-restore", "success");
-        }
-      } else {
-        showToast("File backup tidak valid", "error");
+        // Tombol Restore
+        const restoreBtn = document.createElement("button");
+        restoreBtn.className =
+          "bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300";
+        restoreBtn.innerHTML = '<i class="fas fa-upload mr-2"></i>Restore Data';
+        restoreBtn.onclick = restoreData;
+
+        // File input untuk restore
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = ".json";
+        fileInput.style.display = "none";
+        fileInput.id = "restoreFileInput";
+        fileInput.onchange = handleRestoreFile;
+
+        backupContainer.appendChild(backupBtn);
+        backupContainer.appendChild(restoreBtn);
+        backupContainer.appendChild(fileInput);
+
+        settingsBtn.parentNode.insertBefore(
+          backupContainer,
+          settingsBtn.nextSibling
+        );
+
+        // Update visibility
+        const updateBackupVisibility = () => {
+          backupContainer.style.display = isSettingsActive ? "flex" : "none";
+        };
+
+        // Modifikasi toggleSettingsMode
+        const originalToggleSettingsMode = toggleSettingsMode;
+        toggleSettingsMode = function () {
+          originalToggleSettingsMode();
+          updateBackupVisibility();
+        };
       }
-    } catch (error) {
-      showToast("Gagal membaca file backup", "error");
-    }
-  };
-  reader.readAsText(file);
-  
-  // Reset file input
-  event.target.value = '';
-}
 
-// Inisialisasi tombol backup/restore
-document.addEventListener('DOMContentLoaded', () => {
-  // ... kode inisialisasi lainnya ...
-  
-  // Tambahkan tombol backup/restore
-  addBackupRestoreButtons();
-});
+      // Fungsi backup data
+      function backupData() {
+        const data = {
+          menuItems: menuItems,
+          completedOrders: completedOrders,
+          customQrImage: customQrImage,
+          customLogoImage: customLogoImage,
+          correctPassword: correctPassword,
+          backupDate: new Date().toISOString(),
+        };
+
+        const dataStr = JSON.stringify(data, null, 2);
+        const dataBlob = new Blob([dataStr], { type: "application/json" });
+
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = `warkobeng_backup_${
+          new Date().toISOString().split("T")[0]
+        }.json`;
+        link.click();
+
+        showToast("Data berhasil di-backup", "success");
+      }
+
+      // Fungsi restore data
+      function restoreData() {
+        document.getElementById("restoreFileInput").click();
+      }
+
+      // Handle file restore
+      function handleRestoreFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            const data = JSON.parse(e.target.result);
+
+            // Validasi data
+            if (data.menuItems && data.completedOrders) {
+              // Konfirmasi restore
+              if (
+                confirm(
+                  "Apakah Anda yakin ingin me-restore data? Data saat ini akan ditimpa."
+                )
+              ) {
+                // Restore data
+                menuItems = data.menuItems || [];
+                completedOrders = data.completedOrders || [];
+                customQrImage = data.customQrImage || null;
+                customLogoImage = data.customLogoImage || null;
+                correctPassword = data.correctPassword || "AnisaWTNT";
+
+                // Save to localStorage
+                saveMenuItems();
+                saveOrders();
+                localStorage.setItem("customQrImage", customQrImage);
+                localStorage.setItem("customLogoImage", customLogoImage);
+                localStorage.setItem("warkobeng_password", correctPassword);
+
+                // Reload UI
+                renderMenu();
+                renderCompletedOrders();
+
+                // Update logo jika ada
+                if (customLogoImage) {
+                  document.getElementById("logoImage").src = customLogoImage;
+                }
+
+                showToast("Data berhasil di-restore", "success");
+              }
+            } else {
+              showToast("File backup tidak valid", "error");
+            }
+          } catch (error) {
+            showToast("Gagal membaca file backup", "error");
+          }
+        };
+        reader.readAsText(file);
+
+        // Reset file input
+        event.target.value = "";
+      }
+
+      // Inisialisasi tombol backup/restore
+      document.addEventListener("DOMContentLoaded", () => {
+        // ... kode inisialisasi lainnya ...
+
+        // Tambahkan tombol backup/restore
+        addBackupRestoreButtons();
+      });
 
       function hideToast() {
         document.getElementById("toast").classList.remove("show");
@@ -2055,27 +2070,34 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Modifikasi fungsi calculateTotal
-function calculateTotal() {
-  const subtotal = currentOrder.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  // Hapus pajak 10%
-  // const tax = subtotal * 0.1;
-  // const total = subtotal + tax;
-  const total = subtotal; // Total sama dengan subtotal karena sudah termasuk pajak
-  
-  document.getElementById("subtotal").textContent = `Rp ${subtotal.toLocaleString("id-ID")}`;
-  // Sembunyikan baris pajak
-  document.getElementById("tax").parentElement.style.display = "none";
-  document.getElementById("grandTotal").textContent = `Rp ${total.toLocaleString("id-ID")}`;
-}
+      function calculateTotal() {
+        const subtotal = currentOrder.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+        // Hapus pajak 10%
+        // const tax = subtotal * 0.1;
+        // const total = subtotal + tax;
+        const total = subtotal; // Total sama dengan subtotal karena sudah termasuk pajak
 
-// Modifikasi fungsi printReceipt
-function printReceipt(orderId) {
-  const order = completedOrders.find(o => o.id === orderId);
-  if (!order) return;
-  
-  const printWindow = window.open('', '_blank');
-  
-  const receiptHTML = `
+        document.getElementById(
+          "subtotal"
+        ).textContent = `Rp ${subtotal.toLocaleString("id-ID")}`;
+        // Sembunyikan baris pajak
+        document.getElementById("tax").parentElement.style.display = "none";
+        document.getElementById(
+          "grandTotal"
+        ).textContent = `Rp ${total.toLocaleString("id-ID")}`;
+      }
+
+      // Modifikasi fungsi printReceipt
+      function printReceipt(orderId) {
+        const order = completedOrders.find((o) => o.id === orderId);
+        if (!order) return;
+
+        const printWindow = window.open("", "_blank");
+
+        const receiptHTML = `
     <!DOCTYPE html>
     <html>
     <head>
@@ -2169,7 +2191,7 @@ function printReceipt(orderId) {
       </div>
       <div class="info-row">
         <span>Waktu:</span>
-        <span>${order.timestamp.split(', ')[1]}</span>
+        <span>${order.timestamp.split(", ")[1]}</span>
       </div>
       <div class="info-row">
         <span>Meja:</span>
@@ -2179,12 +2201,18 @@ function printReceipt(orderId) {
       <div class="divider"></div>
       
       <div class="items">
-        ${order.items.map(item => `
+        ${order.items
+          .map(
+            (item) => `
           <div class="item-row">
             <span>${item.name} x ${item.quantity}</span>
-            <span>Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</span>
+            <span>Rp ${(item.price * item.quantity).toLocaleString(
+              "id-ID"
+            )}</span>
           </div>
-        `).join('')}
+        `
+          )
+          .join("")}
       </div>
       
       <div class="divider"></div>
@@ -2192,7 +2220,7 @@ function printReceipt(orderId) {
       <div class="total-section">
         <div class="total-row">
           <span>TOTAL:</span>
-          <span>Rp ${order.total.toLocaleString('id-ID')}</span>
+          <span>Rp ${order.total.toLocaleString("id-ID")}</span>
         </div>
       </div>
       
@@ -2209,28 +2237,30 @@ function printReceipt(orderId) {
     </body>
     </html>
   `;
-  
-  printWindow.document.write(receiptHTML);
-  printWindow.document.close();
-  
-  setTimeout(() => {
-    printWindow.print();
-    printWindow.close();
-  }, 500);
-  
-  showToast("Struk pembayaran sedang dicetak", "info");
-}
 
-// Modifikasi fungsi printPaymentProof
-function printPaymentProof() {
-  if (!currentPaymentOrderId) return;
-  
-  const order = completedOrders.find(o => o.id === currentPaymentOrderId);
-  if (!order) return;
-  
-  const printWindow = window.open('', '_blank');
-  
-  const receiptHTML = `
+        printWindow.document.write(receiptHTML);
+        printWindow.document.close();
+
+        setTimeout(() => {
+          printWindow.print();
+          printWindow.close();
+        }, 500);
+
+        showToast("Struk pembayaran sedang dicetak", "info");
+      }
+
+      // Modifikasi fungsi printPaymentProof
+      function printPaymentProof() {
+        if (!currentPaymentOrderId) return;
+
+        const order = completedOrders.find(
+          (o) => o.id === currentPaymentOrderId
+        );
+        if (!order) return;
+
+        const printWindow = window.open("", "_blank");
+
+        const receiptHTML = `
     <!DOCTYPE html>
     <html>
     <head>
@@ -2334,7 +2364,7 @@ function printPaymentProof() {
       </div>
       <div class="info-row">
         <span>Waktu:</span>
-        <span>${order.timestamp.split(', ')[1]}</span>
+        <span>${order.timestamp.split(", ")[1]}</span>
       </div>
       <div class="info-row">
         <span>Meja:</span>
@@ -2344,12 +2374,18 @@ function printPaymentProof() {
       <div class="divider"></div>
       
       <div class="items">
-        ${order.items.map(item => `
+        ${order.items
+          .map(
+            (item) => `
           <div class="item-row">
             <span>${item.name} x ${item.quantity}</span>
-            <span>Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</span>
+            <span>Rp ${(item.price * item.quantity).toLocaleString(
+              "id-ID"
+            )}</span>
           </div>
-        `).join('')}
+        `
+          )
+          .join("")}
       </div>
       
       <div class="divider"></div>
@@ -2357,7 +2393,7 @@ function printPaymentProof() {
       <div class="total-section">
         <div class="total-row">
           <span>TOTAL:</span>
-          <span>Rp ${order.total.toLocaleString('id-ID')}</span>
+          <span>Rp ${order.total.toLocaleString("id-ID")}</span>
         </div>
       </div>
       
@@ -2379,110 +2415,122 @@ function printPaymentProof() {
     </body>
     </html>
   `;
-  
-  printWindow.document.write(receiptHTML);
-  printWindow.document.close();
-  
-  setTimeout(() => {
-    printWindow.print();
-    printWindow.close();
-  }, 500);
-  
-  showToast("Bukti pembayaran sedang dicetak", "info");
-}
 
-// Modifikasi fungsi completeOrder
-function completeOrder() {
-  const tableNumber = document.getElementById("tableNumber").value.trim();
-  if (currentOrder.length === 0) {
-    showToast("Tidak ada pesanan untuk diselesaikan", "error");
-    return;
-  }
-  if (!tableNumber) {
-    showToast("Masukkan nomor meja", "error");
-    return;
-  }
-  const existingOrder = completedOrders.find((order) => order.table === tableNumber && !order.paid);
-  if (existingOrder) {
-    showToast(`Meja ${tableNumber} masih ada pesanan yang belum dibayar`, "error");
-    return;
-  }
-  // Hapus perhitungan pajak
-  const total = parseFloat(document.getElementById("grandTotal").textContent.replace("Rp ", "").replace(/\./g, ""));
-  // const total = parseFloat(document.getElementById("grandTotal").textContent.replace("Rp ", "").replace(/\./g, "")) * 0.9; // Kalkulasi lama dengan pajak
-  
-  const newOrder = {
-    id: Date.now(),
-    timestamp: new Date().toLocaleString("id-ID"),
-    date: new Date().toISOString().split("T")[0],
-    table: tableNumber,
-    items: [...currentOrder],
-    total: total,
-    paid: false,
-  };
-  completedOrders.push(newOrder);
-  saveOrders();
-  currentOrder = [];
-  document.getElementById("tableNumber").value = "";
-  renderOrderList();
-  showToast("Pesanan berhasil dibuat", "success");
-  showTab("results");
-}
+        printWindow.document.write(receiptHTML);
+        printWindow.document.close();
 
-// Modifikasi formatReceiptForPrinter untuk menghapus pajak
-function formatReceiptForPrinter(order, isPaid) {
-  let receipt = "\n";
-  
-  // Header
-  receipt += "================================\n";
-  receipt += "           WARKOBENG\n";
-  receipt += "    Warung Kopi Bengkel\n";
-  receipt += "Tempat Nyaman untuk Kopi\n";
-  receipt += "    dan Obrolan Hangat\n";
-  receipt += "================================\n\n";
-  
-  // Info transaksi
-  receipt += `Tanggal: ${order.date}\n`;
-  receipt += `Waktu: ${order.timestamp.split(', ')[1]}\n`;
-  receipt += `Meja: ${order.table}\n`;
-  receipt += "--------------------------------\n\n";
-  
-  // Detail items
-  receipt += "ITEM                   QTY   TOTAL\n";
-  receipt += "--------------------------------\n";
-  
-  order.items.forEach(item => {
-    const itemName = item.name.padEnd(20, ' ');
-    const qty = item.quantity.toString().padStart(3, ' ');
-    const total = `Rp ${(item.price * item.quantity).toLocaleString('id-ID')}`;
-    receipt += `${itemName} ${qty} ${total}\n`;
-  });
-  
-  receipt += "--------------------------------\n";
-  
-  // Total tanpa pajak
-  receipt += `TOTAL: Rp ${order.total.toLocaleString('id-ID')}\n`;
-  receipt += "================================\n";
-  
-  // Status pembayaran
-  if (isPaid) {
-    receipt += "          SUDAH DIBAYAR\n";
-  } else {
-    receipt += "       MENUNGGU PEMBAYARAN\n";
-    receipt += "================================\n";
-    receipt += "Scan QRIS untuk pembayaran:\n\n";
-    receipt += "[QR CODE AREA - SCAN DISINI]\n";
-  }
-  
-  receipt += "================================\n";
-  receipt += "Terima kasih atas kunjungan Anda\n";
-  receipt += "WarKoBeng - Warung Kopi Bengkel\n\n";
-  
-  // Cut command untuk printer thermal
-  receipt += "\x1D\x56\x00"; // Paper cut
-  
-  return receipt;
-}
+        setTimeout(() => {
+          printWindow.print();
+          printWindow.close();
+        }, 500);
+
+        showToast("Bukti pembayaran sedang dicetak", "info");
+      }
+
+      // Modifikasi fungsi completeOrder
+      function completeOrder() {
+        const tableNumber = document.getElementById("tableNumber").value.trim();
+        if (currentOrder.length === 0) {
+          showToast("Tidak ada pesanan untuk diselesaikan", "error");
+          return;
+        }
+        if (!tableNumber) {
+          showToast("Masukkan nomor meja", "error");
+          return;
+        }
+        const existingOrder = completedOrders.find(
+          (order) => order.table === tableNumber && !order.paid
+        );
+        if (existingOrder) {
+          showToast(
+            `Meja ${tableNumber} masih ada pesanan yang belum dibayar`,
+            "error"
+          );
+          return;
+        }
+        // Hapus perhitungan pajak
+        const total = parseFloat(
+          document
+            .getElementById("grandTotal")
+            .textContent.replace("Rp ", "")
+            .replace(/\./g, "")
+        );
+        // const total = parseFloat(document.getElementById("grandTotal").textContent.replace("Rp ", "").replace(/\./g, "")) * 0.9; // Kalkulasi lama dengan pajak
+
+        const newOrder = {
+          id: Date.now(),
+          timestamp: new Date().toLocaleString("id-ID"),
+          date: new Date().toISOString().split("T")[0],
+          table: tableNumber,
+          items: [...currentOrder],
+          total: total,
+          paid: false,
+        };
+        completedOrders.push(newOrder);
+        saveOrders();
+        currentOrder = [];
+        document.getElementById("tableNumber").value = "";
+        renderOrderList();
+        showToast("Pesanan berhasil dibuat", "success");
+        showTab("results");
+      }
+
+      // Modifikasi formatReceiptForPrinter untuk menghapus pajak
+      function formatReceiptForPrinter(order, isPaid) {
+        let receipt = "\n";
+
+        // Header
+        receipt += "================================\n";
+        receipt += "           WARKOBENG\n";
+        receipt += "    Warung Kopi Bengkel\n";
+        receipt += "Tempat Nyaman untuk Kopi\n";
+        receipt += "    dan Obrolan Hangat\n";
+        receipt += "================================\n\n";
+
+        // Info transaksi
+        receipt += `Tanggal: ${order.date}\n`;
+        receipt += `Waktu: ${order.timestamp.split(", ")[1]}\n`;
+        receipt += `Meja: ${order.table}\n`;
+        receipt += "--------------------------------\n\n";
+
+        // Detail items
+        receipt += "ITEM                   QTY   TOTAL\n";
+        receipt += "--------------------------------\n";
+
+        order.items.forEach((item) => {
+          const itemName = item.name.padEnd(20, " ");
+          const qty = item.quantity.toString().padStart(3, " ");
+          const total = `Rp ${(item.price * item.quantity).toLocaleString(
+            "id-ID"
+          )}`;
+          receipt += `${itemName} ${qty} ${total}\n`;
+        });
+
+        receipt += "--------------------------------\n";
+
+        // Total tanpa pajak
+        receipt += `TOTAL: Rp ${order.total.toLocaleString("id-ID")}\n`;
+        receipt += "================================\n";
+
+        // Status pembayaran
+        if (isPaid) {
+          receipt += "          SUDAH DIBAYAR\n";
+        } else {
+          receipt += "       MENUNGGU PEMBAYARAN\n";
+          receipt += "================================\n";
+          receipt += "Scan QRIS untuk pembayaran:\n\n";
+          receipt += "[QR CODE AREA - SCAN DISINI]\n";
+        }
+
+        receipt += "================================\n";
+        receipt += "Terima kasih atas kunjungan Anda\n";
+        receipt += "WarKoBeng - Warung Kopi Bengkel\n\n";
+
+        // Cut command untuk printer thermal
+        receipt += "\x1D\x56\x00"; // Paper cut
+
+        return receipt;
+      }
 
       function clearOrder() {
         if (currentOrder.length === 0) {
