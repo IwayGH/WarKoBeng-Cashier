@@ -22,7 +22,7 @@ Sistem pemesanan online untuk Warung Kopi Bengkel dengan fitur pembayaran QRIS d
 
 ## 🚀 Demo Live
 
-[[https://iwaygh.github.io/warkobeng-cashier])
+[[https://iwaygh.github.io/warkobeng-cashier])]
 
 ## 💻 Teknologi
 
