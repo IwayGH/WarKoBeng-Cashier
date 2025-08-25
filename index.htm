@@ -11,7 +11,6 @@
       const isOnline =
         window.location.hostname !== "localhost" &&
         window.location.hostname !== "127.0.0.1";
-
       // Tampilkan notasi untuk pengguna online
       if (isOnline) {
         // Tambahkan banner informasi
@@ -29,7 +28,6 @@
       </div>
     </div>
   `;
-
         // Sisipkan setelah header
         const header = document.querySelector(".sticky-header");
         if (header) {
@@ -798,10 +796,6 @@
                 Subtotal:
                 <span id="subtotal" class="font-bold text-amber-900">Rp 0</span>
               </p>
-              <p class="text-lg">
-                Pajak (10%):
-                <span id="tax" class="font-bold text-amber-900">Rp 0</span>
-              </p>
               <p class="text-2xl font-extrabold mt-4">
                 Total: <span id="grandTotal" class="text-amber-700">Rp 0</span>
               </p>
@@ -906,7 +900,6 @@
         </div>
       </div>
     </div>
-
     <!-- Password Modal -->
     <div id="passwordModal" class="modal">
       <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
@@ -954,7 +947,6 @@
         </div>
       </div>
     </div>
-
     <!-- Change Password Modal -->
     <div id="changePasswordModal" class="modal">
       <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
@@ -1027,7 +1019,6 @@
         </div>
       </div>
     </div>
-
     <!-- Logo Upload Modal -->
     <div id="logoUploadModal" class="modal">
       <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
@@ -1041,7 +1032,6 @@
           </button>
         </div>
         <p class="text-amber-700 mb-6">Unggah gambar logo untuk WarKoBeng</p>
-
         <div class="mb-6">
           <div id="logoUploadArea" class="logo-upload-area">
             <input
@@ -1061,7 +1051,6 @@
             </div>
           </div>
         </div>
-
         <div class="mb-6 text-center">
           <img
             id="logoPreview"
@@ -1074,7 +1063,6 @@
             Belum ada logo yang diunggah
           </p>
         </div>
-
         <div class="flex justify-end space-x-3">
           <button
             id="clearLogoBtn"
@@ -1093,7 +1081,6 @@
         </div>
       </div>
     </div>
-
     <!-- Menu Image Upload Modal -->
     <div id="menuImageUploadModal" class="modal">
       <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
@@ -1109,7 +1096,6 @@
         <p class="text-amber-700 mb-6">
           Unggah gambar untuk <span id="menuImageName" class="font-bold"></span>
         </p>
-
         <div class="mb-6">
           <div id="menuImageUploadArea" class="menu-image-upload-area">
             <input
@@ -1129,7 +1115,6 @@
             </div>
           </div>
         </div>
-
         <div class="mb-6 text-center">
           <img
             id="menuImagePreview"
@@ -1142,7 +1127,6 @@
             Belum ada gambar yang diunggah
           </p>
         </div>
-
         <div class="flex justify-end space-x-3">
           <button
             id="clearMenuImageBtn"
@@ -1167,7 +1151,6 @@
         </div>
       </div>
     </div>
-
     <!-- Menu Form Modal (Add/Edit) -->
     <div id="menuFormModal" class="modal">
       <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
@@ -1183,7 +1166,6 @@
           </button>
         </div>
         <p class="text-amber-700 mb-6">Isi detail menu baru</p>
-
         <div class="mb-4">
           <label class="block text-amber-800 text-sm font-bold mb-2"
             >Nama Menu</label
@@ -1195,7 +1177,6 @@
             class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
           />
         </div>
-
         <div class="mb-4">
           <label class="block text-amber-800 text-sm font-bold mb-2"
             >Kategori</label
@@ -1212,7 +1193,6 @@
             <option value="Menu Tambahan">Menu Tambahan</option>
           </select>
         </div>
-
         <div class="mb-4">
           <label class="block text-amber-800 text-sm font-bold mb-2"
             >Deskripsi</label
@@ -1224,7 +1204,6 @@
             class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
           ></textarea>
         </div>
-
         <div class="mb-4">
           <label class="block text-amber-800 text-sm font-bold mb-2"
             >Harga (Rp)</label
@@ -1237,7 +1216,6 @@
             class="w-full p-3 rounded-lg border-2 border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
           />
         </div>
-
         <div class="mb-4">
           <label class="block text-amber-800 text-sm font-bold mb-2"
             >Tipe Menu</label
@@ -1251,7 +1229,6 @@
             <option value="additional">Menu Tambahan</option>
           </select>
         </div>
-
         <p
           class="text-red-500 text-sm mb-4"
           id="menuFormError"
@@ -1259,7 +1236,6 @@
         >
           Harap isi semua field dengan benar!
         </p>
-
         <div class="flex justify-end space-x-3">
           <button
             onclick="closeMenuFormModal()"
@@ -1276,7 +1252,6 @@
         </div>
       </div>
     </div>
-
     <!-- QR Management Modal -->
     <div id="qrModal" class="modal">
       <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
@@ -1292,7 +1267,6 @@
           </button>
         </div>
         <p class="text-amber-700 mb-6">Unggah gambar QRIS untuk pembayaran</p>
-
         <div class="mb-6">
           <div id="qrUploadArea" class="qr-upload-area">
             <input type="file" id="qrUpload" accept="image/*" class="hidden" />
@@ -1307,7 +1281,6 @@
             </div>
           </div>
         </div>
-
         <div class="mb-6 text-center">
           <img
             id="qrPreview"
@@ -1320,7 +1293,6 @@
             Belum ada QRIS yang diunggah
           </p>
         </div>
-
         <div class="flex justify-end space-x-3">
           <button
             id="clearQrBtn"
@@ -1339,7 +1311,6 @@
         </div>
       </div>
     </div>
-
     <!-- Payment QR Modal -->
     <div id="paymentQrModal" class="modal">
       <div class="modal-content glass-effect rounded-xl p-8 max-w-sm w-full">
@@ -1369,7 +1340,6 @@
           </p>
           <p class="text-amber-600 text-sm" id="paymentTable">Meja -</p>
         </div>
-
         <!-- Tombol print bukti pembayaran dan konfirmasi -->
         <div class="flex space-x-3">
           <button
@@ -1387,7 +1357,6 @@
         </div>
       </div>
     </div>
-
     <!-- Download Options Modal -->
     <div id="downloadModal" class="modal">
       <div class="modal-content glass-effect rounded-xl p-8 max-w-md w-full">
@@ -1425,7 +1394,6 @@
         </div>
       </div>
     </div>
-
     <script>
       // Global variables
       let menuItems = [
@@ -1531,7 +1499,6 @@
       let currentEditingMenuItem = null;
       let correctPassword =
         localStorage.getItem("warkobeng_password") || "AnisaWTNT";
-
       // Initialize dark mode
       if (isDarkMode) {
         document.body.classList.add("dark-mode");
@@ -1539,7 +1506,6 @@
           .getElementById("darkModeIcon")
           .classList.replace("fa-moon", "fa-sun");
       }
-
       // Toast notification
       function showToast(message, type = "success") {
         const toast = document.getElementById("toast");
@@ -1562,27 +1528,23 @@
       // Tambahkan di bagian pengaturan
       function addBackupRestoreButtons() {
         const settingsBtn = document.getElementById("settingsBtn");
-
         // Container untuk tombol backup/restore
         const backupContainer = document.createElement("div");
         backupContainer.className = "flex space-x-2 mt-2";
         backupContainer.id = "backupContainer";
         backupContainer.style.display = "none";
-
         // Tombol Backup
         const backupBtn = document.createElement("button");
         backupBtn.className =
           "bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300";
         backupBtn.innerHTML = '<i class="fas fa-download mr-2"></i>Backup Data';
         backupBtn.onclick = backupData;
-
         // Tombol Restore
         const restoreBtn = document.createElement("button");
         restoreBtn.className =
           "bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300";
         restoreBtn.innerHTML = '<i class="fas fa-upload mr-2"></i>Restore Data';
         restoreBtn.onclick = restoreData;
-
         // File input untuk restore
         const fileInput = document.createElement("input");
         fileInput.type = "file";
@@ -1590,21 +1552,17 @@
         fileInput.style.display = "none";
         fileInput.id = "restoreFileInput";
         fileInput.onchange = handleRestoreFile;
-
         backupContainer.appendChild(backupBtn);
         backupContainer.appendChild(restoreBtn);
         backupContainer.appendChild(fileInput);
-
         settingsBtn.parentNode.insertBefore(
           backupContainer,
           settingsBtn.nextSibling
         );
-
         // Update visibility
         const updateBackupVisibility = () => {
           backupContainer.style.display = isSettingsActive ? "flex" : "none";
         };
-
         // Modifikasi toggleSettingsMode
         const originalToggleSettingsMode = toggleSettingsMode;
         toggleSettingsMode = function () {
@@ -1612,7 +1570,6 @@
           updateBackupVisibility();
         };
       }
-
       // Fungsi backup data
       function backupData() {
         const data = {
@@ -1623,35 +1580,28 @@
           correctPassword: correctPassword,
           backupDate: new Date().toISOString(),
         };
-
         const dataStr = JSON.stringify(data, null, 2);
         const dataBlob = new Blob([dataStr], { type: "application/json" });
-
         const link = document.createElement("a");
         link.href = URL.createObjectURL(dataBlob);
         link.download = `warkobeng_backup_${
           new Date().toISOString().split("T")[0]
         }.json`;
         link.click();
-
         showToast("Data berhasil di-backup", "success");
       }
-
       // Fungsi restore data
       function restoreData() {
         document.getElementById("restoreFileInput").click();
       }
-
       // Handle file restore
       function handleRestoreFile(event) {
         const file = event.target.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = function (e) {
           try {
             const data = JSON.parse(e.target.result);
-
             // Validasi data
             if (data.menuItems && data.completedOrders) {
               // Konfirmasi restore
@@ -1666,23 +1616,19 @@
                 customQrImage = data.customQrImage || null;
                 customLogoImage = data.customLogoImage || null;
                 correctPassword = data.correctPassword || "AnisaWTNT";
-
                 // Save to localStorage
                 saveMenuItems();
                 saveOrders();
                 localStorage.setItem("customQrImage", customQrImage);
                 localStorage.setItem("customLogoImage", customLogoImage);
                 localStorage.setItem("warkobeng_password", correctPassword);
-
                 // Reload UI
                 renderMenu();
                 renderCompletedOrders();
-
                 // Update logo jika ada
                 if (customLogoImage) {
                   document.getElementById("logoImage").src = customLogoImage;
                 }
-
                 showToast("Data berhasil di-restore", "success");
               }
             } else {
@@ -1693,23 +1639,18 @@
           }
         };
         reader.readAsText(file);
-
         // Reset file input
         event.target.value = "";
       }
-
       // Inisialisasi tombol backup/restore
       document.addEventListener("DOMContentLoaded", () => {
         // ... kode inisialisasi lainnya ...
-
         // Tambahkan tombol backup/restore
         addBackupRestoreButtons();
       });
-
       function hideToast() {
         document.getElementById("toast").classList.remove("show");
       }
-
       // Dark mode toggle
       function toggleDarkMode() {
         isDarkMode = !isDarkMode;
@@ -1722,7 +1663,6 @@
           icon.classList.replace("fa-sun", "fa-moon");
         }
       }
-
       // Tab navigation
       function showTab(tabName) {
         // Hide all tabs
@@ -1747,18 +1687,15 @@
           renderDailySummary();
         }
       }
-
       // Password modal functions
       function openPasswordModal() {
         document.getElementById("passwordModal").classList.add("show");
         document.getElementById("passwordInput").value = "";
         document.getElementById("passwordError").style.display = "none";
       }
-
       function closePasswordModal() {
         document.getElementById("passwordModal").classList.remove("show");
       }
-
       function checkPassword() {
         const password = document.getElementById("passwordInput").value;
         if (password === correctPassword) {
@@ -1769,7 +1706,6 @@
           document.getElementById("passwordInput").value = "";
         }
       }
-
       // Change password modal functions
       function openChangePasswordModal() {
         document.getElementById("changePasswordModal").classList.add("show");
@@ -1778,18 +1714,15 @@
         document.getElementById("confirmPasswordInput").value = "";
         document.getElementById("changePasswordError").style.display = "none";
       }
-
       function closeChangePasswordModal() {
         document.getElementById("changePasswordModal").classList.remove("show");
       }
-
       function changePassword() {
         const oldPassword = document.getElementById("oldPasswordInput").value;
         const newPassword = document.getElementById("newPasswordInput").value;
         const confirmPassword = document.getElementById(
           "confirmPasswordInput"
         ).value;
-
         if (oldPassword !== correctPassword) {
           document.getElementById("changePasswordError").textContent =
             "Password lama salah!";
@@ -1797,7 +1730,6 @@
             "block";
           return;
         }
-
         if (newPassword !== confirmPassword) {
           document.getElementById("changePasswordError").textContent =
             "Password baru tidak cocok!";
@@ -1805,7 +1737,6 @@
             "block";
           return;
         }
-
         if (newPassword.length < 6) {
           document.getElementById("changePasswordError").textContent =
             "Password baru minimal 6 karakter!";
@@ -1813,13 +1744,11 @@
             "block";
           return;
         }
-
         correctPassword = newPassword;
         localStorage.setItem("warkobeng_password", correctPassword);
         closeChangePasswordModal();
         showToast("Password berhasil diubah", "success");
       }
-
       function handleSettingsClick() {
         if (isSettingsActive) {
           toggleSettingsMode();
@@ -1827,7 +1756,6 @@
           openPasswordModal();
         }
       }
-
       // Settings mode
       function toggleSettingsMode() {
         isSettingsActive = !isSettingsActive;
@@ -1859,7 +1787,6 @@
             "text-amber-800"
           );
         }
-
         // Show/hide settings buttons
         document.getElementById("manageQrBtn").style.display = isSettingsActive
           ? "block"
@@ -1873,13 +1800,11 @@
           : "none";
         document.getElementById("logoUploadBtn").style.display =
           isSettingsActive ? "block" : "none";
-
         // Show/hide add item buttons
         document.querySelectorAll(".add-item-btn").forEach((btn) => {
           btn.style.display = isSettingsActive ? "block" : "none";
         });
       }
-
       // Render menu items
       function renderMenu() {
         const drinksContainer = document.getElementById("drinksMenu");
@@ -1904,7 +1829,6 @@
             additionalContainer.appendChild(createMenuCard(item));
           });
       }
-
       function createMenuCard(item) {
         const card = document.createElement("div");
         card.className =
@@ -1931,7 +1855,6 @@
             }
           </div>
         `;
-
         if (isSettingsActive) {
           actionButtons = `
             <div class="flex space-x-2 mt-4">
@@ -1965,7 +1888,6 @@
         `;
         return card;
       }
-
       // Global search
       document.getElementById("globalSearch").addEventListener("input", (e) => {
         const searchTerm = e.target.value.toLowerCase();
@@ -1979,7 +1901,6 @@
           }
         });
       });
-
       // Order management
       function addToOrder(itemId) {
         const item = menuItems.find((i) => i.id === itemId);
@@ -1993,7 +1914,6 @@
         showToast(`${item.name} ditambahkan ke pesanan`, "success");
         showTab("order");
       }
-
       function renderOrderList() {
         const orderList = document.getElementById("orderList");
         if (currentOrder.length === 0) {
@@ -2052,7 +1972,6 @@
         }
         calculateTotal();
       }
-
       function updateQuantity(index, change) {
         currentOrder[index].quantity += change;
         if (currentOrder[index].quantity <= 0) {
@@ -2061,14 +1980,12 @@
           renderOrderList();
         }
       }
-
       function removeFromOrder(index) {
         const item = currentOrder[index];
         currentOrder.splice(index, 1);
         renderOrderList();
         showToast(`${item.name} dihapus dari pesanan`, "info");
       }
-
       // Modifikasi fungsi calculateTotal
       function calculateTotal() {
         const subtotal = currentOrder.reduce(
@@ -2076,27 +1993,19 @@
           0
         );
         // Hapus pajak 10%
-        // const tax = subtotal * 0.1;
-        // const total = subtotal + tax;
         const total = subtotal; // Total sama dengan subtotal karena sudah termasuk pajak
-
         document.getElementById(
           "subtotal"
         ).textContent = `Rp ${subtotal.toLocaleString("id-ID")}`;
-        // Sembunyikan baris pajak
-        document.getElementById("tax").parentElement.style.display = "none";
         document.getElementById(
           "grandTotal"
         ).textContent = `Rp ${total.toLocaleString("id-ID")}`;
       }
-
       // Modifikasi fungsi printReceipt
       function printReceipt(orderId) {
         const order = completedOrders.find((o) => o.id === orderId);
         if (!order) return;
-
         const printWindow = window.open("", "_blank");
-
         const receiptHTML = `
     <!DOCTYPE html>
     <html>
@@ -2237,29 +2146,22 @@
     </body>
     </html>
   `;
-
         printWindow.document.write(receiptHTML);
         printWindow.document.close();
-
         setTimeout(() => {
           printWindow.print();
           printWindow.close();
         }, 500);
-
         showToast("Struk pembayaran sedang dicetak", "info");
       }
-
       // Modifikasi fungsi printPaymentProof
       function printPaymentProof() {
         if (!currentPaymentOrderId) return;
-
         const order = completedOrders.find(
           (o) => o.id === currentPaymentOrderId
         );
         if (!order) return;
-
         const printWindow = window.open("", "_blank");
-
         const receiptHTML = `
     <!DOCTYPE html>
     <html>
@@ -2415,18 +2317,14 @@
     </body>
     </html>
   `;
-
         printWindow.document.write(receiptHTML);
         printWindow.document.close();
-
         setTimeout(() => {
           printWindow.print();
           printWindow.close();
         }, 500);
-
         showToast("Bukti pembayaran sedang dicetak", "info");
       }
-
       // Modifikasi fungsi completeOrder
       function completeOrder() {
         const tableNumber = document.getElementById("tableNumber").value.trim();
@@ -2455,8 +2353,6 @@
             .textContent.replace("Rp ", "")
             .replace(/\./g, "")
         );
-        // const total = parseFloat(document.getElementById("grandTotal").textContent.replace("Rp ", "").replace(/\./g, "")) * 0.9; // Kalkulasi lama dengan pajak
-
         const newOrder = {
           id: Date.now(),
           timestamp: new Date().toLocaleString("id-ID"),
@@ -2474,64 +2370,6 @@
         showToast("Pesanan berhasil dibuat", "success");
         showTab("results");
       }
-
-      // Modifikasi formatReceiptForPrinter untuk menghapus pajak
-      function formatReceiptForPrinter(order, isPaid) {
-        let receipt = "\n";
-
-        // Header
-        receipt += "================================\n";
-        receipt += "           WARKOBENG\n";
-        receipt += "    Warung Kopi Bengkel\n";
-        receipt += "Tempat Nyaman untuk Kopi\n";
-        receipt += "    dan Obrolan Hangat\n";
-        receipt += "================================\n\n";
-
-        // Info transaksi
-        receipt += `Tanggal: ${order.date}\n`;
-        receipt += `Waktu: ${order.timestamp.split(", ")[1]}\n`;
-        receipt += `Meja: ${order.table}\n`;
-        receipt += "--------------------------------\n\n";
-
-        // Detail items
-        receipt += "ITEM                   QTY   TOTAL\n";
-        receipt += "--------------------------------\n";
-
-        order.items.forEach((item) => {
-          const itemName = item.name.padEnd(20, " ");
-          const qty = item.quantity.toString().padStart(3, " ");
-          const total = `Rp ${(item.price * item.quantity).toLocaleString(
-            "id-ID"
-          )}`;
-          receipt += `${itemName} ${qty} ${total}\n`;
-        });
-
-        receipt += "--------------------------------\n";
-
-        // Total tanpa pajak
-        receipt += `TOTAL: Rp ${order.total.toLocaleString("id-ID")}\n`;
-        receipt += "================================\n";
-
-        // Status pembayaran
-        if (isPaid) {
-          receipt += "          SUDAH DIBAYAR\n";
-        } else {
-          receipt += "       MENUNGGU PEMBAYARAN\n";
-          receipt += "================================\n";
-          receipt += "Scan QRIS untuk pembayaran:\n\n";
-          receipt += "[QR CODE AREA - SCAN DISINI]\n";
-        }
-
-        receipt += "================================\n";
-        receipt += "Terima kasih atas kunjungan Anda\n";
-        receipt += "WarKoBeng - Warung Kopi Bengkel\n\n";
-
-        // Cut command untuk printer thermal
-        receipt += "\x1D\x56\x00"; // Paper cut
-
-        return receipt;
-      }
-
       function clearOrder() {
         if (currentOrder.length === 0) {
           showToast("Pesanan sudah kosong", "info");
@@ -2541,410 +2379,6 @@
         renderOrderList();
         showToast("Pesanan dibersihkan", "success");
       }
-
-      function completeOrder() {
-        const tableNumber = document.getElementById("tableNumber").value.trim();
-        if (currentOrder.length === 0) {
-          showToast("Tidak ada pesanan untuk diselesaikan", "error");
-          return;
-        }
-        if (!tableNumber) {
-          showToast("Masukkan nomor meja", "error");
-          return;
-        }
-        const existingOrder = completedOrders.find(
-          (order) => order.table === tableNumber && !order.paid
-        );
-        if (existingOrder) {
-          showToast(
-            `Meja ${tableNumber} masih ada pesanan yang belum dibayar`,
-            "error"
-          );
-          return;
-        }
-        const total = parseFloat(
-          document
-            .getElementById("grandTotal")
-            .textContent.replace("Rp ", "")
-            .replace(/\./g, "")
-        );
-        const newOrder = {
-          id: Date.now(),
-          timestamp: new Date().toLocaleString("id-ID"),
-          date: new Date().toISOString().split("T")[0],
-          table: tableNumber,
-          items: [...currentOrder],
-          total: total,
-          paid: false,
-        };
-        completedOrders.push(newOrder);
-        saveOrders();
-        currentOrder = [];
-        document.getElementById("tableNumber").value = "";
-        renderOrderList();
-        showToast("Pesanan berhasil dibuat", "success");
-        showTab("results");
-      }
-
-      // Print receipt function
-      function printReceipt(orderId) {
-        const order = completedOrders.find((o) => o.id === orderId);
-        if (!order) return;
-
-        // Buat window baru untuk print
-        const printWindow = window.open("", "_blank");
-
-        // Template struk pembayaran
-        const receiptHTML = `
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <title>Struk Pembayaran - WarKoBeng</title>
-            <style>
-              @page {
-                size: 80mm auto;
-                margin: 5mm;
-              }
-              body {
-                font-family: 'Courier New', monospace;
-                font-size: 12px;
-                line-height: 1.4;
-                margin: 0;
-                padding: 10px;
-              }
-              .header {
-                text-align: center;
-                margin-bottom: 15px;
-              }
-              .title {
-                font-size: 18px;
-                font-weight: bold;
-                margin-bottom: 5px;
-              }
-              .subtitle {
-                font-size: 12px;
-                margin-bottom: 10px;
-              }
-              .divider {
-                border-top: 1px dashed #000;
-                margin: 10px 0;
-              }
-              .info-row {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 5px;
-              }
-              .items {
-                margin: 10px 0;
-              }
-              .item-row {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 3px;
-              }
-              .total-section {
-                margin-top: 15px;
-              }
-              .total-row {
-                display: flex;
-                justify-content: space-between;
-                font-weight: bold;
-                margin-bottom: 5px;
-              }
-              .footer {
-                text-align: center;
-                margin-top: 20px;
-                font-size: 10px;
-              }
-              .paid-status {
-                text-align: center;
-                font-weight: bold;
-                font-size: 14px;
-                margin: 15px 0;
-                padding: 5px;
-                border: 1px solid #000;
-                background-color: #d4edda;
-                color: #155724;
-              }
-              @media print {
-                body {
-                  -webkit-print-color-adjust: exact;
-                  color-adjust: exact;
-                }
-              }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <div class="title">WARKOBENG</div>
-              <div class="subtitle">Warung Kopi Bengkel</div>
-              <div class="subtitle">Tempat Nyaman untuk Kopi dan Obrolan Hangat</div>
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="info-row">
-              <span>Tanggal:</span>
-              <span>${order.date}</span>
-            </div>
-            <div class="info-row">
-              <span>Waktu:</span>
-              <span>${order.timestamp.split(", ")[1]}</span>
-            </div>
-            <div class="info-row">
-              <span>Meja:</span>
-              <span>${order.table}</span>
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="items">
-              ${order.items
-                .map(
-                  (item) => `
-                <div class="item-row">
-                  <span>${item.name} x ${item.quantity}</span>
-                  <span>Rp ${(item.price * item.quantity).toLocaleString(
-                    "id-ID"
-                  )}</span>
-                </div>
-              `
-                )
-                .join("")}
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="total-section">
-              <div class="info-row">
-                <span>Subtotal:</span>
-                <span>Rp ${(order.total * 0.9).toLocaleString("id-ID")}</span>
-              </div>
-              <div class="info-row">
-                <span>Pajak (10%):</span>
-                <span>Rp ${(order.total * 0.1).toLocaleString("id-ID")}</span>
-              </div>
-              <div class="total-row">
-                <span>TOTAL:</span>
-                <span>Rp ${order.total.toLocaleString("id-ID")}</span>
-              </div>
-            </div>
-            
-            <div class="paid-status">
-              ✓ SUDAH DIBAYAR
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="footer">
-              <div>Terima kasih atas kunjungan Anda</div>
-              <div>WarKoBeng - Warung Kopi Bengkel</div>
-            </div>
-          </body>
-          </html>
-        `;
-
-        printWindow.document.write(receiptHTML);
-        printWindow.document.close();
-
-        // Tunggu sebentar lalu print
-        setTimeout(() => {
-          printWindow.print();
-          printWindow.close();
-        }, 500);
-
-        showToast("Struk pembayaran sedang dicetak", "info");
-      }
-
-      // Print payment proof function
-      function printPaymentProof() {
-        if (!currentPaymentOrderId) return;
-
-        const order = completedOrders.find(
-          (o) => o.id === currentPaymentOrderId
-        );
-        if (!order) return;
-
-        // Buat window baru untuk print
-        const printWindow = window.open("", "_blank");
-
-        // Template struk pembayaran dengan status menunggu
-        const receiptHTML = `
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <title>Bukti Pembayaran - WarKoBeng</title>
-            <style>
-              @page {
-                size: 80mm auto;
-                margin: 5mm;
-              }
-              body {
-                font-family: 'Courier New', monospace;
-                font-size: 12px;
-                line-height: 1.4;
-                margin: 0;
-                padding: 10px;
-              }
-              .header {
-                text-align: center;
-                margin-bottom: 15px;
-              }
-              .title {
-                font-size: 18px;
-                font-weight: bold;
-                margin-bottom: 5px;
-              }
-              .subtitle {
-                font-size: 12px;
-                margin-bottom: 10px;
-              }
-              .divider {
-                border-top: 1px dashed #000;
-                margin: 10px 0;
-              }
-              .info-row {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 5px;
-              }
-              .items {
-                margin: 10px 0;
-              }
-              .item-row {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 3px;
-              }
-              .total-section {
-                margin-top: 15px;
-              }
-              .total-row {
-                display: flex;
-                justify-content: space-between;
-                font-weight: bold;
-                margin-bottom: 5px;
-              }
-              .footer {
-                text-align: center;
-                margin-top: 20px;
-                font-size: 10px;
-              }
-              .payment-status {
-                text-align: center;
-                font-weight: bold;
-                font-size: 14px;
-                margin: 15px 0;
-                padding: 5px;
-                border: 1px solid #000;
-                background-color: #fff3cd;
-                color: #856404;
-              }
-              .qr-section {
-                text-align: center;
-                margin: 15px 0;
-              }
-              .qr-code {
-                width: 150px;
-                height: 150px;
-                margin: 0 auto;
-                border: 1px solid #ddd;
-              }
-              @media print {
-                body {
-                  -webkit-print-color-adjust: exact;
-                  color-adjust: exact;
-                }
-              }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <div class="title">WARKOBENG</div>
-              <div class="subtitle">Warung Kopi Bengkel</div>
-              <div class="subtitle">Tempat Nyaman untuk Kopi dan Obrolan Hangat</div>
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="info-row">
-              <span>Tanggal:</span>
-              <span>${order.date}</span>
-            </div>
-            <div class="info-row">
-              <span>Waktu:</span>
-              <span>${order.timestamp.split(", ")[1]}</span>
-            </div>
-            <div class="info-row">
-              <span>Meja:</span>
-              <span>${order.table}</span>
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="items">
-              ${order.items
-                .map(
-                  (item) => `
-                <div class="item-row">
-                  <span>${item.name} x ${item.quantity}</span>
-                  <span>Rp ${(item.price * item.quantity).toLocaleString(
-                    "id-ID"
-                  )}</span>
-                </div>
-              `
-                )
-                .join("")}
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="total-section">
-              <div class="info-row">
-                <span>Subtotal:</span>
-                <span>Rp ${(order.total * 0.9).toLocaleString("id-ID")}</span>
-              </div>
-              <div class="info-row">
-                <span>Pajak (10%):</span>
-                <span>Rp ${(order.total * 0.1).toLocaleString("id-ID")}</span>
-              </div>
-              <div class="total-row">
-                <span>TOTAL:</span>
-                <span>Rp ${order.total.toLocaleString("id-ID")}</span>
-              </div>
-            </div>
-            
-            <div class="payment-status">
-              ⏳ MENUNGGU PEMBAYARAN
-            </div>
-            
-            <div class="qr-section">
-              <p class="text-sm mb-2">Scan QRIS untuk pembayaran:</p>
-              <img src="${customQrImage}" alt="QRIS Payment" class="qr-code">
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="footer">
-              <div>Terima kasih atas kunjungan Anda</div>
-              <div>WarKoBeng - Warung Kopi Bengkel</div>
-            </div>
-          </body>
-          </html>
-        `;
-
-        printWindow.document.write(receiptHTML);
-        printWindow.document.close();
-
-        // Tunggu sebentar lalu print
-        setTimeout(() => {
-          printWindow.print();
-          printWindow.close();
-        }, 500);
-
-        showToast("Bukti pembayaran sedang dicetak", "info");
-      }
-
       // Completed orders
       function renderCompletedOrders() {
         const container = document.getElementById("completedOrders");
@@ -3020,7 +2454,6 @@
           })
           .join("");
       }
-
       // Recap orders
       function renderRecapOrders() {
         const container = document.getElementById("recapOrders");
@@ -3106,7 +2539,6 @@
           }
         `;
       }
-
       // Daily summary
       function renderDailySummary() {
         const selectedDate = document.getElementById("recapDate").value;
@@ -3210,7 +2642,6 @@
         `;
         downloadBtn.disabled = false;
       }
-
       // Logo Management
       function openLogoUploadModal() {
         document.getElementById("logoUploadModal").classList.add("show");
@@ -3227,45 +2658,36 @@
           document.getElementById("logoUploadPrompt").style.display = "block";
         }
       }
-
       function closeLogoUploadModal() {
         document.getElementById("logoUploadModal").classList.remove("show");
       }
-
       // Setup Logo upload area
       document.addEventListener("DOMContentLoaded", function () {
         const logoUploadArea = document.getElementById("logoUploadArea");
         const logoUpload = document.getElementById("logoUpload");
-
         // Click to upload
         logoUploadArea.addEventListener("click", function () {
           logoUpload.click();
         });
-
         // Drag and drop
         logoUploadArea.addEventListener("dragover", function (e) {
           e.preventDefault();
           logoUploadArea.classList.add("dragover");
         });
-
         logoUploadArea.addEventListener("dragleave", function () {
           logoUploadArea.classList.remove("dragover");
         });
-
         logoUploadArea.addEventListener("drop", function (e) {
           e.preventDefault();
           logoUploadArea.classList.remove("dragover");
-
           if (e.dataTransfer.files.length) {
             logoUpload.files = e.dataTransfer.files;
             handleLogoUpload();
           }
         });
-
         // File input change
         logoUpload.addEventListener("change", handleLogoUpload);
       });
-
       function handleLogoUpload() {
         const file = document.getElementById("logoUpload").files[0];
         if (file) {
@@ -3274,13 +2696,11 @@
             showToast("Ukuran file terlalu besar. Maksimal 2MB.", "error");
             return;
           }
-
           // Check file type
           if (!file.type.match("image.*")) {
             showToast("Format file tidak valid. Harus berupa gambar.", "error");
             return;
           }
-
           const reader = new FileReader();
           reader.onload = (event) => {
             customLogoImage = event.target.result;
@@ -3296,7 +2716,6 @@
           reader.readAsDataURL(file);
         }
       }
-
       function clearLogo() {
         customLogoImage = null;
         localStorage.removeItem("customLogoImage");
@@ -3308,14 +2727,12 @@
         document.getElementById("logoUploadPrompt").style.display = "block";
         showToast("Logo berhasil dihapus", "success");
       }
-
       // Menu Image Management
       function openMenuImageUploadModal(itemId) {
         currentMenuImageId = itemId;
         const item = menuItems.find((i) => i.id === itemId);
         document.getElementById("menuImageName").textContent = item.name;
         document.getElementById("menuImageUploadModal").classList.add("show");
-
         // Show current image if exists
         if (item.image !== "https://via.placeholder.com/300") {
           document.getElementById("menuImagePreview").src = item.image;
@@ -3332,50 +2749,41 @@
             "block";
         }
       }
-
       function closeMenuImageUploadModal() {
         document
           .getElementById("menuImageUploadModal")
           .classList.remove("show");
         currentMenuImageId = null;
       }
-
       // Setup Menu Image upload area
       document.addEventListener("DOMContentLoaded", function () {
         const menuImageUploadArea = document.getElementById(
           "menuImageUploadArea"
         );
         const menuImageUpload = document.getElementById("menuImageUpload");
-
         // Click to upload
         menuImageUploadArea.addEventListener("click", function () {
           menuImageUpload.click();
         });
-
         // Drag and drop
         menuImageUploadArea.addEventListener("dragover", function (e) {
           e.preventDefault();
           menuImageUploadArea.classList.add("dragover");
         });
-
         menuImageUploadArea.addEventListener("dragleave", function () {
           menuImageUploadArea.classList.remove("dragover");
         });
-
         menuImageUploadArea.addEventListener("drop", function (e) {
           e.preventDefault();
           menuImageUploadArea.classList.remove("dragover");
-
           if (e.dataTransfer.files.length) {
             menuImageUpload.files = e.dataTransfer.files;
             handleMenuImageUpload();
           }
         });
-
         // File input change
         menuImageUpload.addEventListener("change", handleMenuImageUpload);
       });
-
       function handleMenuImageUpload() {
         const file = document.getElementById("menuImageUpload").files[0];
         if (file) {
@@ -3384,13 +2792,11 @@
             showToast("Ukuran file terlalu besar. Maksimal 2MB.", "error");
             return;
           }
-
           // Check file type
           if (!file.type.match("image.*")) {
             showToast("Format file tidak valid. Harus berupa gambar.", "error");
             return;
           }
-
           const reader = new FileReader();
           reader.onload = (event) => {
             document.getElementById("menuImagePreview").src =
@@ -3405,7 +2811,6 @@
           reader.readAsDataURL(file);
         }
       }
-
       function saveMenuImage() {
         if (currentMenuImageId) {
           const newImage = document.getElementById("menuImagePreview").src;
@@ -3421,7 +2826,6 @@
           }
         }
       }
-
       function clearMenuImage() {
         if (currentMenuImageId) {
           const itemIndex = menuItems.findIndex(
@@ -3440,7 +2844,6 @@
           }
         }
       }
-
       // Menu Form Management (Add/Edit)
       function showAddForm(type) {
         currentEditingMenuItem = null;
@@ -3454,7 +2857,6 @@
         document.getElementById("menuFormError").style.display = "none";
         document.getElementById("menuFormModal").classList.add("show");
       }
-
       function editMenuItem(id) {
         const item = menuItems.find((i) => i.id === id);
         if (item) {
@@ -3470,12 +2872,10 @@
           document.getElementById("menuFormModal").classList.add("show");
         }
       }
-
       function closeMenuFormModal() {
         document.getElementById("menuFormModal").classList.remove("show");
         currentEditingMenuItem = null;
       }
-
       function saveMenuItem() {
         const name = document.getElementById("menuNameInput").value.trim();
         const category = document.getElementById("menuCategoryInput").value;
@@ -3484,13 +2884,11 @@
           .value.trim();
         const price = parseInt(document.getElementById("menuPriceInput").value);
         const type = document.getElementById("menuTypeInput").value;
-
         // Validation
         if (!name || !category || !description || isNaN(price) || price <= 0) {
           document.getElementById("menuFormError").style.display = "block";
           return;
         }
-
         if (currentEditingMenuItem) {
           // Edit existing item
           const itemIndex = menuItems.findIndex(
@@ -3521,12 +2919,10 @@
           menuItems.push(newItem);
           showToast("Menu berhasil ditambahkan", "success");
         }
-
         saveMenuItems();
         renderMenu();
         closeMenuFormModal();
       }
-
       function deleteMenuItem(id) {
         if (confirm("Apakah Anda yakin ingin menghapus menu ini?")) {
           menuItems = menuItems.filter((item) => item.id !== id);
@@ -3535,7 +2931,6 @@
           showToast("Menu berhasil dihapus", "success");
         }
       }
-
       // QR Management
       function openQrManagementModal() {
         document.getElementById("qrModal").classList.add("show");
@@ -3552,45 +2947,36 @@
           document.getElementById("uploadPrompt").style.display = "block";
         }
       }
-
       function closeQrModal() {
         document.getElementById("qrModal").classList.remove("show");
       }
-
       // Setup QR upload area
       document.addEventListener("DOMContentLoaded", function () {
         const qrUploadArea = document.getElementById("qrUploadArea");
         const qrUpload = document.getElementById("qrUpload");
-
         // Click to upload
         qrUploadArea.addEventListener("click", function () {
           qrUpload.click();
         });
-
         // Drag and drop
         qrUploadArea.addEventListener("dragover", function (e) {
           e.preventDefault();
           qrUploadArea.classList.add("dragover");
         });
-
         qrUploadArea.addEventListener("dragleave", function () {
           qrUploadArea.classList.remove("dragover");
         });
-
         qrUploadArea.addEventListener("drop", function (e) {
           e.preventDefault();
           qrUploadArea.classList.remove("dragover");
-
           if (e.dataTransfer.files.length) {
             qrUpload.files = e.dataTransfer.files;
             handleQrUpload();
           }
         });
-
         // File input change
         qrUpload.addEventListener("change", handleQrUpload);
       });
-
       function handleQrUpload() {
         const file = document.getElementById("qrUpload").files[0];
         if (file) {
@@ -3599,13 +2985,11 @@
             showToast("Ukuran file terlalu besar. Maksimal 2MB.", "error");
             return;
           }
-
           // Check file type
           if (!file.type.match("image.*")) {
             showToast("Format file tidak valid. Harus berupa gambar.", "error");
             return;
           }
-
           const reader = new FileReader();
           reader.onload = (event) => {
             customQrImage = event.target.result;
@@ -3620,7 +3004,6 @@
           reader.readAsDataURL(file);
         }
       }
-
       function clearQrCode() {
         customQrImage = null;
         localStorage.removeItem("customQrImage");
@@ -3630,13 +3013,11 @@
         document.getElementById("uploadPrompt").style.display = "block";
         showToast("QRIS berhasil dihapus", "success");
       }
-
       function showPaymentQR(orderId) {
         if (!customQrImage) {
           showToast("Unggah QRIS pembayaran terlebih dahulu", "error");
           return;
         }
-
         const order = completedOrders.find((o) => o.id === orderId);
         if (order) {
           currentPaymentOrderId = orderId;
@@ -3650,12 +3031,10 @@
           document.getElementById("paymentQrModal").classList.add("show");
         }
       }
-
       function closePaymentQrModal() {
         document.getElementById("paymentQrModal").classList.remove("show");
         currentPaymentOrderId = null;
       }
-
       function confirmPayment() {
         if (currentPaymentOrderId) {
           markAsPaid(currentPaymentOrderId);
@@ -3664,7 +3043,6 @@
           closePaymentQrModal();
         }
       }
-
       function markAsPaid(orderId) {
         const orderIndex = completedOrders.findIndex((o) => o.id === orderId);
         if (orderIndex !== -1) {
@@ -3675,7 +3053,6 @@
           showToast("Pembayaran berhasil dikonfirmasi", "success");
         }
       }
-
       // Download functions
       function openDailyDownloadModal() {
         const selectedDate = document.getElementById("recapDate").value;
@@ -3686,11 +3063,9 @@
         document.getElementById("downloadDate").textContent = selectedDate;
         document.getElementById("downloadModal").classList.add("show");
       }
-
       function closeDownloadModal() {
         document.getElementById("downloadModal").classList.remove("show");
       }
-
       function downloadDailyRecap(format) {
         const selectedDate = document.getElementById("recapDate").value;
         const dailyOrders = completedOrders.filter(
@@ -3772,7 +3147,6 @@
         );
         closeDownloadModal();
       }
-
       // Local storage
       function saveOrders() {
         localStorage.setItem(
@@ -3780,42 +3154,35 @@
           JSON.stringify(completedOrders)
         );
       }
-
       function loadOrders() {
         const saved = localStorage.getItem("warkobeng_orders");
         if (saved) {
           completedOrders = JSON.parse(saved);
         }
       }
-
       function saveMenuItems() {
         localStorage.setItem("warkobeng_menuItems", JSON.stringify(menuItems));
       }
-
       function loadMenuItems() {
         const saved = localStorage.getItem("warkobeng_menuItems");
         if (saved) {
           menuItems = JSON.parse(saved);
         }
       }
-
       // Initialize
       document.addEventListener("DOMContentLoaded", () => {
         loadOrders();
         loadMenuItems();
-
         // Load custom logo if exists
         if (customLogoImage) {
           document.getElementById("logoImage").src = customLogoImage;
         }
-
         renderMenu();
         // Set today's date as default
         const today = new Date().toISOString().split("T")[0];
         document.getElementById("recapDate").value = today;
         // Initialize tab
         showTab("menu");
-
         // Hide settings buttons by default
         document.getElementById("manageQrBtn").style.display = "none";
         document.getElementById("changePasswordBtn").style.display = "none";
