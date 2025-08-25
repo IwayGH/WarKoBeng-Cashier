@@ -798,9 +798,20 @@
                 Subtotal:
                 <span id="subtotal" class="font-bold text-amber-900">Rp 0</span>
               </p>
-              <p class="text-lg">
-                <!-- Pajak (10%) -->:
-                <span id="" class="font-bold text-amber-900"></span>
+              <p // Fungsi untuk menghitung total tanpa pajak
+function updateTotal() {
+  // Dapatkan subtotal
+  const subtotal = parseFloat(document.getElementById('subtotal').textContent.replace('Rp ', ''));
+  
+  // Set pajak ke 0
+  document.getElementById('tax').textContent = 'Rp 0';
+  
+  // Set total sama dengan subtotal (tanpa pajak)
+  document.getElementById('grandTotal').textContent = 'Rp ' + subtotal.toFixed(2);
+}
+              </p>
+              <p class="text-2xl font-extrabold mt-4">
+                Total: <span id="grandTotal" class="text-amber-700">Rp 0</span>
               </p>
               <p class="text-2xl font-extrabold mt-4">
                 Total: <span id="grandTotal" class="text-amber-700">Rp 0</span>
