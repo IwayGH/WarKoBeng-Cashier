@@ -2159,6 +2159,8 @@
       // ==========================================
       // LOGIKA PRINTER THERMAL (WEB SERIAL API)
       // ==========================================
+      
+      // Fungsi untuk menghubungkan printer
       async function connectPrinter() {
         if (!('serial' in navigator)) {
             showToast("Browser tidak mendukung Web Serial API. Gunakan Chrome/Edge Desktop.", "error");
@@ -2184,67 +2186,99 @@
         }
       }
 
-      // Helper untuk garis putus-putus
+      // Helper untuk garis putus-putus (32 karakter untuk 58mm)
       const DASH_LINE = "--------------------------------\n";
 
-      // Fungsi cetak browser fallback (Format Rapi)
+      // Fungsi cetak browser fallback (Format Teks 58mm)
       function printReceiptBrowserFallback(orderId, isPaid = true) {
           const order = completedOrders.find(o => o.id === orderId);
           if (!order) return;
-          const printWindow = window.open("", "_blank");
-          const statusText = isPaid ? "LUNAS" : "MENUNGGU PEMBAYARAN";
-          const statusColor = isPaid ? "#155724" : "#856404";
-          const statusBg = isPaid ? "#d4edda" : "#fff3cd";
-
-          // Template Struk Rapi
-          const receiptHTML = `
-            <!DOCTYPE html><html><head><title>Struk</title>
-            <style>
-              body{font-family:'Courier New';font-size:12px;width:280px;margin:0 auto;padding:10px;}
-              .header{text-align:center;margin-bottom:10px;}
-              .divider{border-top:1px dashed #000;margin:8px 0;}
-              .row{display:flex;justify-content:space-between;margin-bottom:2px;}
-              .item-details{display:flex;justify-content:space-between;font-size:11px;color:#555;margin-bottom:4px;}
-              .total-row{display:flex;justify-content:space-between;font-weight:bold;font-size:14px;margin-top:5px;}
-              .status{text-align:center;font-weight:bold;margin:15px 0;padding:5px;border:1px solid #000;background-color:${statusBg};color:${statusColor};}
-            </style>
-            </head><body>
-            <div class="header">
-              <div style="font-size:18px;font-weight:bold;">WARKOBENG</div>
-              <div style="font-size:12px;">Warung Kopi Bengkel</div>
-            </div>
-            <div class="divider"></div>
-            <div class="row"><span>Tanggal:</span><span>${order.date}</span></div>
-            <div class="row"><span>Waktu:</span><span>${order.timestamp.split(", ")[1]}</span></div>
-            <div class="row"><span>Meja:</span><span>${order.table}</span></div>
-            <div class="divider"></div>
-            
-            ${order.items.map(item => `
-              <div style="margin-bottom:5px;">
-                <div class="row"><span style="font-weight:bold;">${item.name}</span><span></span></div>
-                <div class="item-details">
-                  <span>${item.quantity} x Rp ${item.price.toLocaleString('id-ID')}</span>
-                  <span>Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</span>
-                </div>
-              </div>
-            `).join('')}
-            
-            <div class="divider"></div>
-            <div class="total-row">
-              <span>TOTAL</span>
-              <span>Rp ${order.total.toLocaleString('id-ID')}</span>
-            </div>
-            <div class="status">${statusText}</div>
-            <div class="divider"></div>
-            <div style="text-align:center;font-size:10px;margin-top:10px;">Terima kasih atas kunjungan Anda</div>
-            </body></html>`;
           
-          printWindow.document.write(receiptHTML);
+          const lineChars = 32; // Lebar standar 58mm
+          let text = '';
+
+          // HEADER
+          text += centerText('WARKOBENG', lineChars) + '\n';
+          text += centerText('Warung Kopi Bengkel', lineChars) + '\n';
+          text += DASH_LINE;
+
+          // INFO
+          const [datePart, timePart] = order.timestamp.split(', ');
+          text += 'Tanggal : ' + datePart + '\n';
+          text += 'Waktu   : ' + timePart + '\n';
+          text += 'Meja    : ' + order.table + '\n';
+          text += DASH_LINE;
+
+          // ITEMS
+          order.items.forEach(item => {
+              // Baris 1: Nama Item
+              text += item.name + '\n';
+              
+              // Baris 2: Qty x Harga ... Total
+              const left = '  ' + item.quantity + ' x ' + formatRupiah(item.price);
+              const right = formatRupiah(item.price * item.quantity);
+              const spaces = ' '.repeat(Math.max(1, lineChars - left.length - right.length));
+              text += left + spaces + right + '\n';
+          });
+
+          text += DASH_LINE;
+          
+          // TOTAL
+          const totalStr = 'TOTAL: ' + formatRupiah(order.total);
+          // Total rata kanan
+          text += ' '.repeat(Math.max(0, lineChars - totalStr.length)) + totalStr + '\n';
+          text += DASH_LINE;
+          
+          // STATUS
+          const status = isPaid ? '== LUNAS ==' : 'MENUNGGU PEMBAYARAN';
+          text += centerText(status, lineChars) + '\n';
+
+          // FOOTER
+          text += centerText('Terima Kasih', lineChars) + '\n';
+          text += '\n\n\n'; // Space untuk cutter
+
+          // Buka window print
+          const printWindow = window.open("", "_blank");
+          const htmlContent = `
+            <!DOCTYPE html><html><head><title>Struk WarKoBeng</title>
+            <style>
+              @page { 
+                size: 58mm auto; /* Ukuran kertas termal */
+                margin: 0; 
+              }
+              body { 
+                margin: 0; 
+                padding: 0; 
+                font-family: 'Courier New', Courier, monospace; 
+                font-size: 10px; /* Ukuran font pas untuk 58mm */
+                width: 58mm;
+                background-color: white;
+                color: black;
+              }
+              pre {
+                margin: 1mm;
+                padding: 0;
+                white-space: pre-wrap; /* Agar teks wrap jika terlalu panjang */
+                word-wrap: break-word;
+              }
+            </style>
+            </head>
+            <body>
+              <pre>${text}</pre>
+              <script>
+                setTimeout(function() {
+                  window.print();
+                  window.close();
+                }, 200);
+              <\/script>
+            </body>
+            </html>
+          `;
+          printWindow.document.write(htmlContent);
           printWindow.document.close();
-          setTimeout(() => { printWindow.print(); printWindow.close(); }, 250);
       }
 
-      // Fungsi utama cetak (Smart)
+      // Fungsi cetak utama (Smart: Thermal atau Browser)
       async function printDirectThermal(order, isPaidStatus) {
         if (!printerWriter) {
             showToast("Printer tidak terhubung. Mencetak via browser...", "info");
@@ -2273,8 +2307,9 @@
             
             // INFO
             commands.push(...LEFT);
-            commands.push(...encoder.encode(`Tanggal : ${order.date}\n`));
-            commands.push(...encoder.encode(`Waktu   : ${order.timestamp.split(", ")[1]}\n`));
+            const [datePart, timePart] = order.timestamp.split(', ');
+            commands.push(...encoder.encode(`Tanggal : ${datePart}\n`));
+            commands.push(...encoder.encode(`Waktu   : ${timePart}\n`));
             commands.push(...encoder.encode(`Meja    : ${order.table}\n`));
             commands.push(...encoder.encode(DASH_LINE));
             
@@ -2283,8 +2318,8 @@
                 // Nama Item (Baris 1)
                 commands.push(...encoder.encode(`${item.name}\n`));
                 // Detail (Baris 2)
-                const left = `  ${item.quantity} x Rp ${item.price.toLocaleString('id-ID')}`;
-                const right = `Rp ${(item.price * item.quantity).toLocaleString('id-ID')}`;
+                const left = "  " + item.quantity + " x " + formatRupiah(item.price);
+                const right = formatRupiah(item.price * item.quantity);
                 // Membuat spasi agar rata kanan (total lebar 32)
                 const space = " ".repeat(Math.max(1, 32 - left.length - right.length));
                 commands.push(...encoder.encode(left + space + right + "\n"));
@@ -2294,7 +2329,8 @@
             commands.push(...encoder.encode(DASH_LINE));
             commands.push(...BOLD_ON);
             const totalStr = `TOTAL: Rp ${order.total.toLocaleString('id-ID')}\n`;
-            commands.push(...encoder.encode(totalStr));
+            // Rata kanan untuk total
+            commands.push(...encoder.encode(" ".repeat(Math.max(0, 32 - totalStr.length)) + totalStr));
             commands.push(...BOLD_OFF);
             
             // STATUS
@@ -2318,6 +2354,19 @@
             showToast("Gagal cetak printer: " + error.message, "error");
             printReceiptBrowserFallback(order.id, isPaidStatus);
         }
+      }
+
+      // Helper format Rupiah sederhana (tanpa simbol Rp untuk perhitungan spasi, tapi ditambahkan di akhir)
+      function formatRupiah(number) {
+          return 'Rp ' + number.toLocaleString('id-ID');
+      }
+
+      // Helper Center Text untuk Browser Print
+      function centerText(text, width) {
+          const padding = Math.max(0, width - text.length);
+          const padLeft = Math.floor(padding / 2);
+          const padRight = padding - padLeft;
+          return ' '.repeat(padLeft) + text + ' '.repeat(padRight);
       }
 
       // Dipanggil oleh tombol "Cetak Struk" di history (Lunas)
