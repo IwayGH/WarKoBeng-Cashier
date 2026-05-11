@@ -1153,7 +1153,7 @@
         ctx.font = 'bold 24px "Courier New", monospace';
 
         const writeText = (text, x, size, align, isBold) => {
-          ctx.font = `${isBold ? 'bold ' : ''}${size}px "Courier New", monospace`;
+          ctx.font = `${size}px "Courier New", monospace`;
           ctx.textAlign = align;
           let xPos = x;
           if (align === 'center') xPos = width / 2;
@@ -1191,7 +1191,7 @@
         });
         drawLine();
 
-        ctx.font = 'bold 22px "Courier New", monospace';
+        ctx.font = '22px "Courier New", monospace';
         ctx.textAlign = 'left'; ctx.fillText('TOTAL', padding, y);
         ctx.textAlign = 'right'; ctx.fillText('Rp ' + formatNum(order.total), width - padding, y);
         y += 35; drawLine();
@@ -1199,7 +1199,7 @@
         y += 10;
         writeText(isPaid ? '== LUNAS ==' : 'MENUNGGU PEMBAYARAN', 0, 22, 'center', true);
         y += 20;
-        writeText('Terima Kasih', 0, 16, 'center', false);
+        writeText('Terima Kasih Atas Kunjungan dan Selamat Menikmati', 0, 12, 'center', false);
 
         const dataUrl = canvas.toDataURL('image/png');
         const printWindow = window.open('', '_blank');
