@@ -1176,6 +1176,13 @@
 
         qrImg.src = qrWebsiteUrl;
 
+  function generateAndPrint(img) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const width = 320;
+    const padding = 20;
+    let y = 30;
+      
           // Format angka
           const formatNum = (num) => isNaN(num) ? "0" : Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
@@ -1183,7 +1190,7 @@
           const qrSize = 100;
           const extraHeight = img ? (qrSize + 70) : 0; 
       
-            function printReceiptImage(orderId, isPaid = false) {
+            function printReceiptImage(orderId, isPaid = true) {
         const order = completedOrders.find(o => o.id === orderId);
         if (!order) return;
 
@@ -1214,8 +1221,8 @@
           };
 
           // === HEADER ===
-          writeText('WARKOBENG', 0, 28, 'center');
-          writeText('Warung Kopi Bengkel', 0, 18, 'center');
+          writeText('WARKOBENG', 0, 28, 'center', true);
+          writeText('Warung Kopi Bengkel', 0, 18, 'center', false);
           y += 10; drawLine();
 
           const parts = order.timestamp ? order.timestamp.split(', ') : [order.date, "--:--"];
@@ -1226,7 +1233,7 @@
 
           // === DAFTAR ITEM ===
           order.items.forEach(item => {
-            writeText(item.name, padding, 18, 'left'); // Nama item normal
+            writeText(item.name, padding, 18, 'left', false); // Nama item normal
             ctx.font = 'normal 16px "Courier New", monospace'; // Detail harga normal
             const leftText = '  ' + item.quantity + ' x Rp ' + formatNum(item.price);
             const rightText = 'Rp ' + formatNum(item.price * item.quantity);
@@ -1255,8 +1262,8 @@
           const printWindow = window.open('', '_blank');
           if (!printWindow) { showToast("Popup blocked", "error"); return; }
 
-          printWindow.document.write('<html><head><title>Struk</title><style>@media print { body { margin: 0; } }><script>setTimeout(function(){window.print();}, 500);<\/script></body></html>');
-          printWindow.document.close();
+          printWindow.document.write(`<html><head><title>Struk</title><style>@media print { body { margin: 0; } img { width: 58mm; height: auto; } }</style></head><body><img src="${dataUrl}" /><script>setTimeout(function(){window.print();}, 500);<\/script></body></html>`);
+    printWindow.document.close();
       }}
 
       function printReceipt(orderId) { printReceiptImage(orderId, true); }
