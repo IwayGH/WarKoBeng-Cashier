@@ -885,7 +885,7 @@
       let correctPassword = localStorage.getItem("warkobeng_password") || "AnisaWTNT";
       let printerDevice = null;
 
-      // Default Menu Data (Merged from Script 1 structure into Script 2 flat array)
+      // Default Menu Data
       const defaultMenuItems = [
         { id: 1, name: "Kopi WarKoBeng", category: "Kopi Espresso-Based", description: "Kopi", price: 17000, type: "drinks", image: null },
         { id: 2, name: "Hazelnut", category: "Kopi Espresso-Based", description: "Kopi", price: 17000, type: "drinks", image: null },
@@ -928,14 +928,14 @@
         { id: 39, name: "Pisang Bakar", category: "Camilan Ringan", description: "Pisang", price: 10000, type: "food", image: null },
         { id: 40, name: "Spesial Menu Taichan Senayan", category: "Menu Tambahan", description: "Tambahan gula aren asli", price: 5000, type: "additional", image: null },
         { id: 41, name: "Extra Telor", category: "Menu Tambahan", description: "Telor Ayam", price: 5000, type: "additional", image: null }
-];
+      ];
 
       // ==================== INITIALIZATION ====================
       document.addEventListener("DOMContentLoaded", () => {
         initDarkMode();
         loadOrders();
         loadMenuItems();
-        createParticles(); // From Script 1
+        createParticles();
         initDateInput();
         initFileUploads();
         
@@ -957,11 +957,10 @@
         document.getElementById("recapDate").value = today;
       }
 
-      // ==================== PARTICLES (Script 1 Feature) ====================
       function createParticles() {
         const container = document.getElementById('particles');
         if (!container) return;
-        container.innerHTML = ''; // Clear existing
+        container.innerHTML = '';
         for (let i = 0; i < 20; i++) {
           const particle = document.createElement('div');
           particle.className = 'particle';
@@ -1155,44 +1154,39 @@
         showTab("results");
       }
 
-      // ==================== PRINTING (Canvas Method from Script 2) ====================
+      // ==================== PRINTING (FIXED) ====================
       function formatNum(num) { return isNaN(num) ? "0" : Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 
+      function printReceiptImage(orderId, isPaid = true) {
+        const order = completedOrders.find(o => o.id === orderId);
+        if (!order) return;
+
         // === PENGATURAN QR CODE ===
-        // Menggunakan Link RAW GitHub agar gambar bisa dibaca oleh printer
         const qrWebsiteUrl = "https://raw.githubusercontent.com/IwayGH/WarKoBeng-Cashier/main/qr-code%20web%20WarKoBeng.png";
 
         const qrImg = new Image();
-        qrImg.crossOrigin = "Anonymous"; // Wajib ada agar gambar dari GitHub bisa dicetak
+        qrImg.crossOrigin = "Anonymous";
 
         qrImg.onload = function() {
-          generateAndPrint(qrImg); // Jika gambar berhasil dimuat
+          generateAndPrint(qrImg);
         };
 
         qrImg.onerror = function() {
           console.error("Gagal memuat gambar QR, mencetak tanpa gambar...");
-          generateAndPrint(null); // Jika gagal, cetak tanpa gambar
+          generateAndPrint(null);
         };
 
         qrImg.src = qrWebsiteUrl;
 
-  function generateAndPrint(img) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const width = 320;
-    const padding = 20;
-    let y = 30;
-      
-          // Format angka
-          const formatNum = (num) => isNaN(num) ? "0" : Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        function generateAndPrint(img) {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const width = 320;
+          const padding = 20;
+          let y = 30;
 
-          // Hitung tinggi kertas (ditambah ruang untuk QR jika ada)
           const qrSize = 100;
           const extraHeight = img ? (qrSize + 70) : 0; 
-      
-            function printReceiptImage(orderId, isPaid = true) {
-        const order = completedOrders.find(o => o.id === orderId);
-        if (!order) return;
 
           canvas.width = width;
           canvas.height = 200 + (order.items.length * 55) + 180 + extraHeight;
@@ -1201,9 +1195,8 @@
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.fillStyle = '#000000';
 
-          // === FUNGSI TEKS (SEMUA NORMAL, TIDAK TEBAL) ===
           const writeText = (text, x, size, align) => {
-            ctx.font = 'normal ' + size + 'px "Courier New", monospace'; // 'normal' memastikan tidak tebal
+            ctx.font = 'normal ' + size + 'px "Courier New", monospace'; // Normal font
             ctx.textAlign = align;
             let xPos = x;
             if (align === 'center') xPos = width / 2;
@@ -1220,9 +1213,8 @@
             y += 10;
           };
 
-          // === HEADER ===
-          writeText('WARKOBENG', 0, 28, 'center', true);
-          writeText('Warung Kopi Bengkel', 0, 18, 'center', false);
+          writeText('WARKOBENG', 0, 28, 'center');
+          writeText('Warung Kopi Bengkel', 0, 18, 'center');
           y += 10; drawLine();
 
           const parts = order.timestamp ? order.timestamp.split(', ') : [order.date, "--:--"];
@@ -1231,10 +1223,9 @@
           writeText('Meja    : ' + order.table, padding, 16, 'left');
           drawLine();
 
-          // === DAFTAR ITEM ===
           order.items.forEach(item => {
-            writeText(item.name, padding, 18, 'left', false); // Nama item normal
-            ctx.font = 'normal 16px "Courier New", monospace'; // Detail harga normal
+            writeText(item.name, padding, 18, 'left');
+            ctx.font = 'normal 16px "Courier New", monospace';
             const leftText = '  ' + item.quantity + ' x Rp ' + formatNum(item.price);
             const rightText = 'Rp ' + formatNum(item.price * item.quantity);
             ctx.textAlign = 'left'; ctx.fillText(leftText, padding, y);
@@ -1243,8 +1234,7 @@
           });
           drawLine();
 
-          // === TOTAL ===
-          ctx.font = 'normal 22px "Courier New", monospace'; // Total normal
+          ctx.font = 'normal 22px "Courier New", monospace';
           ctx.textAlign = 'left'; ctx.fillText('TOTAL', padding, y);
           ctx.textAlign = 'right'; ctx.fillText('Rp ' + formatNum(order.total), width - padding, y);
           y += 35; drawLine();
@@ -1256,26 +1246,33 @@
 
           // === FOOTER: URL & QR CODE ===
           y += 15;
-          writeText('Nongkrong Hemat Ala Gen Z', 0, 20, 'center');
+          writeText('Nongkrong Hemat Ala Gen Z', 0, 18, 'center');
 
-          // === PROSES PRINT ===
+          if (img) {
+            y += 10;
+            const xQr = (width - qrSize) / 2;
+            ctx.drawImage(img, xQr, y, qrSize, qrSize);
+          }
+
+          const dataUrl = canvas.toDataURL('image/png');
           const printWindow = window.open('', '_blank');
           if (!printWindow) { showToast("Popup blocked", "error"); return; }
 
-          printWindow.document.write(`<html><head><title>Struk</title><style>@media print { body { margin: 0; } img { width: 58mm; height: auto; } }</style></head><body><img src="${dataUrl}" /><script>setTimeout(function(){window.print();}, 500);<\/script></body></html>`);
-    printWindow.document.close();
-      }}
+          printWindow.document.write('<html><head><title>Struk</title><style>@media print { body { margin: 0; } img { width: 58mm; height: auto; } }</style></head><body><img src="' + dataUrl + '" /><script>setTimeout(function(){window.print();}, 500);<\/script></body></html>');
+          printWindow.document.close();
+      }
+      }
 
       function printReceipt(orderId) { printReceiptImage(orderId, true); }
       function printPaymentProofDirect() { if (currentPaymentOrderId) printReceiptImage(currentPaymentOrderId, false); }
 
-      // ==================== BLUETOOTH PRINTER (Script 1 Feature) ====================
+      // ==================== BLUETOOTH PRINTER ====================
       async function connectPrinterBluetooth() {
         if (!navigator.bluetooth) { showToast('Browser tidak mendukung Bluetooth', 'error'); return; }
         try {
           showToast('Mencari printer...', 'info');
           const device = await navigator.bluetooth.requestDevice({
-            filters: [{ services: ['000018f0-0000-1000-8000-00805f9b34fb'] }], // Common thermal printer service
+            filters: [{ services: ['000018f0-0000-1000-8000-00805f9b34fb'] }],
             optionalServices: ['battery_service', 'device_information']
           });
           printerDevice = device;
@@ -1405,7 +1402,7 @@
 
       function toggleSettingsMode() {
         isSettingsActive = !isSettingsActive;
-        renderMenu(); // Re-render cards to show edit/delete buttons
+        renderMenu();
         const settingsBtn = document.getElementById("settingsBtn");
         
         if (isSettingsActive) {
@@ -1418,7 +1415,6 @@
           settingsBtn.classList.add("bg-amber-100", "hover:bg-amber-200", "text-amber-800");
         }
 
-        // Toggle visibility of admin buttons
         ["manageQrBtn", "changePasswordBtn", "clearOrderBtn", "downloadBtn", "logoUploadBtn", "connectPrinterBtn"].forEach(id => {
           const el = document.getElementById(id);
           if(el) el.style.display = isSettingsActive ? (id === 'connectPrinterBtn' ? (printerDevice ? 'none' : 'inline-block') : 'inline-block') : "none";
@@ -1430,7 +1426,6 @@
 
         document.querySelectorAll(".add-item-btn").forEach(btn => btn.style.display = isSettingsActive ? "block" : "none");
         
-        // Backup buttons (from Script 2)
         const backupContainer = document.getElementById("backupContainer");
         if (!backupContainer) addBackupRestoreButtons(); 
         else backupContainer.style.display = isSettingsActive ? "flex" : "none";
@@ -1642,7 +1637,6 @@
         closeDownloadModal();
       }
 
-      // Backup & Restore (Script 2)
       function addBackupRestoreButtons() {
         const settingsBtn = document.getElementById("settingsBtn");
         if (!settingsBtn || document.getElementById("backupContainer")) return;
@@ -1690,7 +1684,7 @@
       function loadMenuItems() {
         const saved = localStorage.getItem("warkobeng_menuItems");
         if (saved) menuItems = JSON.parse(saved);
-        else menuItems = defaultMenuItems; // Load defaults if empty
+        else menuItems = defaultMenuItems;
       }
     </script>
   </body>
