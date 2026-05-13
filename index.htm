@@ -1162,38 +1162,6 @@
         const order = completedOrders.find(o => o.id === orderId);
         if (!order) return;
 
-        // === PENGATURAN QR CODE ===
-        // Menggunakan Link RAW GitHub agar gambar bisa dibaca oleh printer
-        const qrWebsiteUrl = "https://raw.githubusercontent.com/IwayGH/WarKoBeng-Cashier/main/qr-code%20web%20WarKoBeng.png";
-
-        const qrImg = new Image();
-        qrImg.crossOrigin = "Anonymous"; // Wajib ada agar gambar dari GitHub bisa dicetak
-
-        qrImg.onload = function() {
-          generateAndPrint(qrImg); // Jika gambar berhasil dimuat
-        };
-
-        qrImg.onerror = function() {
-          console.error("Gagal memuat gambar QR, mencetak tanpa gambar...");
-          generateAndPrint(null); // Jika gagal, cetak tanpa gambar
-        };
-
-        qrImg.src = qrWebsiteUrl;
-
-        function generateAndPrint(img) {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          const width = 320;
-          const padding = 20;
-          let y = 30;
-
-          // Format angka
-          const formatNum = (num) => isNaN(num) ? "0" : Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-          // Hitung tinggi kertas (ditambah ruang untuk QR jika ada)
-          const qrSize = 100;
-          const extraHeight = img ? (qrSize + 70) : 0; 
-
           canvas.width = width;
           canvas.height = 200 + (order.items.length * 55) + 180 + extraHeight;
 
