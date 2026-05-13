@@ -1162,11 +1162,38 @@
         const order = completedOrders.find(o => o.id === orderId);
         if (!order) return;
 
+      // === PENGATURAN QR CODE ===
+      // PERINGATAN: Ganti URL di bawah ini dengan Link Permanen Anda (misal: link Imgur/GitHub).
+        const qrWebsiteUrl = "https://iwaygh.github.io/WarKoBeng-Website";
+
+        const qrImg = new Image();
+        qrImg.crossOrigin = "Anonymous"; // Diperlukan agar canvas bisa membaca gambar dari domain lain
+
+        qrImg.onload = function() {
+        generateAndPrint(qrImg);
+      };
+
+        qrImg.onerror = function() {
+        console.error("Gagal memuat gambar QR, mencetak tanpa gambar...");
+        generateAndPrint(null); // Jika gagal, cetak tanpa gambar
+      };
+
+        qrImg.src = qrWebsiteUrl;
+
+       function generateAndPrint(img) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         const width = 320;
         const padding = 20;
         let y = 30;
+
+       // Format angka
+        const formatNum = (num) => isNaN(num) ? "0" : Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+       // Hitung tinggi canvas (tambahan ruang untuk QR jika gambar ada)
+        const qrSize = 100; // Ukuran QR Code
+        const extraHeight = img ? (qrSize + 60) : 0;
+
         
         canvas.width = width;
         canvas.height = 200 + (order.items.length * 55) + 180; // Dynamic height estimation
@@ -1223,7 +1250,7 @@
         y += 10;
         writeText(isPaid ? '== LUNAS ==' : 'MENUNGGU PEMBAYARAN', 0, 22, 'center', false);
         y += 20;
-        writeText('Terima Kasih Atas Kunjungan dan Selamat Menikmati', 0, 12, 'center', false);
+        writeText('Terima Kasih dan Selamat Menikmati', 0, 12, 'center', false);
 
         const dataUrl = canvas.toDataURL('image/png');
         const printWindow = window.open('', '_blank');
