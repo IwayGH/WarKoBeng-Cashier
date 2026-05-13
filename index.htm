@@ -499,7 +499,7 @@
         <!-- Menu Tab -->
         <div id="menuTab" class="tab-content">
           <div class="flex justify-between items-center mb-6">
-            <h3 class="text-2xl font-bold text-amber-900">Menu Kami</h3>
+            <h3 class="text-2xl font-bold text-amber-900">WarKoBeng Menu</h3>
             <div class="flex space-x-2 flex-wrap gap-2 justify-end">
               <button onclick="openQrManagementModal()" id="manageQrBtn" class="btn-primary px-4 py-2 rounded-lg shadow-md" style="display: none">
                 <i class="fas fa-qrcode mr-2"></i>QRIS
@@ -532,7 +532,7 @@
             <section class="fade-in">
               <div class="flex items-center justify-between mb-4">
                 <h4 class="text-xl font-bold text-amber-900 flex items-center">
-                  <i class="fas fa-mug-hot text-amber-700 mr-2"></i>Minuman Pilihan
+                  <i class="fas fa-mug-hot text-amber-700 mr-2"></i>WarKoBeng Minuman
                 </h4>
                 <button onclick="showAddForm('drinks')" class="add-item-btn btn-primary px-4 py-2 rounded-lg shadow-md" style="display: none">
                   <i class="fas fa-plus mr-2"></i>Tambah
@@ -544,7 +544,7 @@
             <section class="fade-in">
               <div class="flex items-center justify-between mb-4">
                 <h4 class="text-xl font-bold text-amber-900 flex items-center">
-                  <i class="fas fa-utensils text-amber-700 mr-2"></i>Makanan Pengganjal
+                  <i class="fas fa-utensils text-amber-700 mr-2"></i>WarKoBeng Makanan
                 </h4>
                 <button onclick="showAddForm('food')" class="add-item-btn btn-primary px-4 py-2 rounded-lg shadow-md" style="display: none">
                   <i class="fas fa-plus mr-2"></i>Tambah
@@ -770,9 +770,10 @@
           <select id="menuCategoryInput" class="w-full p-3 rounded-lg border-2 border-amber-200">
             <option value="Kopi Espresso-Based">Kopi Espresso-Based</option>
             <option value="Kopi Non-Espresso">Kopi Non-Espresso</option>
-            <option value="Teh">Teh</option>
-            <option value="Camilan Ringan">Camilan Ringan</option>
-            <option value="Makanan Berat Ringan">Makanan Berat Ringan</option>
+            <option value="Minuman Dingin">Minuman Dingin</option>
+            <option value="Minuman Panas">Minuman Panas</option>
+            <option value="Camilan">Camilan</option>
+            <option value="Makanan">Makanan</option>
             <option value="Menu Tambahan">Menu Tambahan</option>
           </select>
         </div>
@@ -818,7 +819,7 @@
         </div>
         <div class="mb-6 text-center">
           <img id="qrPreview" src="" alt="QRIS Preview" class="max-w-full max-h-48 mx-auto rounded-lg shadow-md" style="display: none"/>
-          <p id="noQrText" class="text-amber-500">Belum ada QRIS yang diunggah</p>
+          <p id="noQrText" class="text-amber-500">Upload QRIS Duuooongsss</p>
         </div>
         <div class="flex justify-end space-x-3">
           <button id="clearQrBtn" onclick="clearQrCode()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition duration-300" style="display: none">Hapus</button>
@@ -1157,18 +1158,19 @@
       // ==================== PRINTING (Canvas Method from Script 2) ====================
       function formatNum(num) { return isNaN(num) ? "0" : Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 
-      function printReceiptImage(orderId, isPaid = true) {
+            function printReceiptImage(orderId, isPaid = true) {
         const order = completedOrders.find(o => o.id === orderId);
         if (!order) return;
 
-        // === LINK RAW GITHUB ===
+        // === PENGATURAN QR CODE ===
+        // Menggunakan Link RAW GitHub agar gambar bisa dibaca oleh printer
         const qrWebsiteUrl = "https://raw.githubusercontent.com/IwayGH/WarKoBeng-Cashier/main/qr-code%20web%20WarKoBeng.png";
 
         const qrImg = new Image();
-        qrImg.crossOrigin = "Anonymous"; // Wajib agar canvas bisa membaca gambar dari GitHub
+        qrImg.crossOrigin = "Anonymous"; // Wajib ada agar gambar dari GitHub bisa dicetak
 
         qrImg.onload = function() {
-          generateAndPrint(qrImg);
+          generateAndPrint(qrImg); // Jika gambar berhasil dimuat
         };
 
         qrImg.onerror = function() {
@@ -1188,20 +1190,20 @@
           // Format angka
           const formatNum = (num) => isNaN(num) ? "0" : Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-          // === PERBAIKAN TINGGI KERTAS ===
-          const qrSize = 100; // Ukuran QR Code
-          const extraHeight = img ? (qrSize + 60) : 0; // Tambah ruang untuk QR
+          // Hitung tinggi kertas (ditambah ruang untuk QR jika ada)
+          const qrSize = 100;
+          const extraHeight = img ? (qrSize + 70) : 0; 
 
           canvas.width = width;
-          // Tinggi kertas ditambah extraHeight
           canvas.height = 200 + (order.items.length * 55) + 180 + extraHeight;
 
           ctx.fillStyle = '#FFFFFF';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.fillStyle = '#000000';
 
-          const writeText = (text, x, size, align, isBold) => {
-            ctx.font = `${isBold ? 'bold' : 'normal'} ${size}px "Courier New", monospace`;
+          // === FUNGSI TEKS (SEMUA NORMAL, TIDAK TEBAL) ===
+          const writeText = (text, x, size, align) => {
+            ctx.font = 'normal ' + size + 'px "Courier New", monospace'; // 'normal' memastikan tidak tebal
             ctx.textAlign = align;
             let xPos = x;
             if (align === 'center') xPos = width / 2;
@@ -1218,41 +1220,43 @@
             y += 10;
           };
 
-          // KONTEN STRUK
-          writeText('WARKOBENG', 0, 28, 'center', false);
-          writeText('Warung Kopi Bengkel', 0, 18, 'center', false);
+          // === HEADER ===
+          writeText('WARKOBENG', 0, 28, 'center');
+          writeText('Warung Kopi Bengkel', 0, 18, 'center');
           y += 10; drawLine();
 
           const parts = order.timestamp ? order.timestamp.split(', ') : [order.date, "--:--"];
-          writeText('Tanggal : ' + (parts[0] || order.date), padding, 16, 'left', false);
-          writeText('Waktu   : ' + (parts[1] || "--:--"), padding, 16, 'left', false);
-          writeText('Meja    : ' + order.table, padding, 16, 'left', false);
+          writeText('Tanggal : ' + (parts[0] || order.date), padding, 16, 'left');
+          writeText('Waktu   : ' + (parts[1] || "--:--"), padding, 16, 'left');
+          writeText('Meja    : ' + order.table, padding, 16, 'left');
           drawLine();
 
+          // === DAFTAR ITEM ===
           order.items.forEach(item => {
-            writeText(item.name, padding, 18, 'left', false);
-            ctx.font = '16px "Courier New", monospace';
-            const leftText = `  ${item.quantity} x Rp ${formatNum(item.price)}`;
-            const rightText = `Rp ${formatNum(item.price * item.quantity)}`;
+            writeText(item.name, padding, 18, 'left'); // Nama item normal
+            ctx.font = 'normal 16px "Courier New", monospace'; // Detail harga normal
+            const leftText = '  ' + item.quantity + ' x Rp ' + formatNum(item.price);
+            const rightText = 'Rp ' + formatNum(item.price * item.quantity);
             ctx.textAlign = 'left'; ctx.fillText(leftText, padding, y);
             ctx.textAlign = 'right'; ctx.fillText(rightText, width - padding, y);
             y += 25;
           });
           drawLine();
 
-          ctx.font = '22px "Courier New", monospace';
+          // === TOTAL ===
+          ctx.font = 'normal 22px "Courier New", monospace'; // Total normal
           ctx.textAlign = 'left'; ctx.fillText('TOTAL', padding, y);
           ctx.textAlign = 'right'; ctx.fillText('Rp ' + formatNum(order.total), width - padding, y);
           y += 35; drawLine();
 
           y += 10;
-          writeText(isPaid ? '== LUNAS ==' : 'MENUNGGU PEMBAYARAN', 0, 22, 'center', false);
+          writeText(isPaid ? '== LUNAS ==' : 'MENUNGGU PEMBAYARAN', 0, 22, 'center');
           y += 20;
-          writeText('Terima Kasih dan Selamat Menikmati', 0, 12, 'center', false);
+          writeText('Terima Kasih dan Selamat Menikmati', 0, 12, 'center');
 
-          // === TAMBAHAN URL & QR CODE ===
+          // === FOOTER: URL & QR CODE ===
           y += 15;
-          writeText('https://iwaygh.github.io/WarKoBeng-Website', 0, 12, 'center', false);
+          writeText('https://iwaygh.github.io/WarKoBeng-Website', 0, 12, 'center');
 
           // Gambar QR Code
           if (img) {
@@ -1261,14 +1265,14 @@
             ctx.drawImage(img, xQr, y, qrSize, qrSize);
           }
 
-          // PROSES PRINT
+          // === PROSES PRINT ===
           const dataUrl = canvas.toDataURL('image/png');
           const printWindow = window.open('', '_blank');
           if (!printWindow) { showToast("Popup blocked", "error"); return; }
 
-          printWindow.document.write(`<html><head><title>Struk</title><style>@media print { body { margin: 0; } img { width: 58mm; height: auto; } }</style></head><body><img src="${dataUrl}" /><script>setTimeout(function(){window.print();}, 500);<\/script></body></html>`);
+          printWindow.document.write('<html><head><title>Struk</title><style>@media print { body { margin: 0; } img { width: 58mm; height: auto; } }</style></head><body><img src="' + dataUrl + '" /><script>setTimeout(function(){window.print();}, 500);<\/script></body></html>');
           printWindow.document.close();
-      }}
+      }
 
       function printReceipt(orderId) { printReceiptImage(orderId, true); }
       function printPaymentProofDirect() { if (currentPaymentOrderId) printReceiptImage(currentPaymentOrderId, false); }
