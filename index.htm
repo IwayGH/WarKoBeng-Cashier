@@ -1256,14 +1256,7 @@
 
           // === FOOTER: URL & QR CODE ===
           y += 15;
-          writeText('Nongkrong Hemat Ala Gen Z', 0, 30, 'center');
-
-          // Gambar QR Code
-          if (img) {
-            y += 10;
-            const xQr = (width - qrSize) / 2; // Posisi tengah
-            ctx.drawImage(img, xQr, y, qrSize, qrSize);
-          }//
+          writeText('Nongkrong Hemat Ala Gen Z', 0, 20, 'center');
 
           // === PROSES PRINT ===
           const dataUrl = canvas.toDataURL('image/png');
