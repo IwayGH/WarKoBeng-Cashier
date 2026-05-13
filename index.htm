@@ -1161,12 +1161,11 @@
         const order = completedOrders.find(o => o.id === orderId);
         if (!order) return;
 
-        // === PERBAIKAN 1: URL RAW GITHUB ===
-        // Link ini mengarah langsung ke file gambar, bukan halaman web.
+        // === LINK RAW GITHUB ANDA (SUDAH DIPERBAIKI) ===
         const qrWebsiteUrl = "https://raw.githubusercontent.com/IwayGH/WarKoBeng-Cashier/main/qr-code%20web%20WarKoBeng.png";
 
         const qrImg = new Image();
-        qrImg.crossOrigin = "Anonymous"; // Penting agar canvas bisa membaca gambar dari GitHub
+        qrImg.crossOrigin = "Anonymous"; // Wajib agar canvas bisa membaca gambar dari GitHub
 
         qrImg.onload = function() {
           generateAndPrint(qrImg);
@@ -1189,13 +1188,12 @@
           // Format angka
           const formatNum = (num) => isNaN(num) ? "0" : Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-          // Hitung tinggi canvas
+          // === PERBAIKAN TINGGI KERTAS ===
           const qrSize = 100; // Ukuran QR Code
-          // === PERBAIKAN 2: TAMBAHKAN extraHeight ===
-          const extraHeight = img ? (qrSize + 60) : 0;
+          const extraHeight = img ? (qrSize + 60) : 0; // Tambah ruang untuk QR
 
           canvas.width = width;
-          // Tinggi kertas ditambah extraHeight agar muat QR
+          // Tinggi kertas ditambah extraHeight
           canvas.height = 200 + (order.items.length * 55) + 180 + extraHeight;
 
           ctx.fillStyle = '#FFFFFF';
@@ -1220,8 +1218,8 @@
             y += 10;
           };
 
-          // Konten Struk Atas
-          writeText('WARKOBENG', 0, 28, 'center', false); // Judul Normal
+          // KONTEN STRUK
+          writeText('WARKOBENG', 0, 28, 'center', false);
           writeText('Warung Kopi Bengkel', 0, 18, 'center', false);
           y += 10; drawLine();
 
@@ -1231,9 +1229,8 @@
           writeText('Meja    : ' + order.table, padding, 16, 'left', false);
           drawLine();
 
-          // Daftar Item
           order.items.forEach(item => {
-            writeText(item.name, padding, 18, 'left', false); // Nama item Normal
+            writeText(item.name, padding, 18, 'left', false);
             ctx.font = '16px "Courier New", monospace';
             const leftText = `  ${item.quantity} x Rp ${formatNum(item.price)}`;
             const rightText = `Rp ${formatNum(item.price * item.quantity)}`;
@@ -1243,7 +1240,6 @@
           });
           drawLine();
 
-          // Total
           ctx.font = '22px "Courier New", monospace';
           ctx.textAlign = 'left'; ctx.fillText('TOTAL', padding, y);
           ctx.textAlign = 'right'; ctx.fillText('Rp ' + formatNum(order.total), width - padding, y);
@@ -1254,26 +1250,25 @@
           y += 20;
           writeText('Terima Kasih dan Selamat Menikmati', 0, 12, 'center', false);
 
-          // === PERBAIKAN 3: KODE UNTUK QR CODE ===
-          // Tambah URL Website
+          // === TAMBAHAN URL & QR CODE ===
           y += 15;
           writeText('https://iwaygh.github.io/WarKoBeng-Website', 0, 12, 'center', false);
 
-          // Jika gambar berhasil dimuat, gambar QR Code
+          // Gambar QR Code
           if (img) {
             y += 10;
             const xQr = (width - qrSize) / 2; // Posisi tengah
             ctx.drawImage(img, xQr, y, qrSize, qrSize);
           }
 
-          // Proses Print Window
+          // PROSES PRINT
           const dataUrl = canvas.toDataURL('image/png');
           const printWindow = window.open('', '_blank');
           if (!printWindow) { showToast("Popup blocked", "error"); return; }
 
           printWindow.document.write(`<html><head><title>Struk</title><style>@media print { body { margin: 0; } img { width: 58mm; height: auto; } }</style></head><body><img src="${dataUrl}" /><script>setTimeout(function(){window.print();}, 500);<\/script></body></html>`);
           printWindow.document.close();
-      }
+      }}
 
       function printReceipt(orderId) { printReceiptImage(orderId, true); }
       function printPaymentProofDirect() { if (currentPaymentOrderId) printReceiptImage(currentPaymentOrderId, false); }
