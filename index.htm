@@ -1256,14 +1256,14 @@
 
           // === FOOTER: URL & QR CODE ===
           y += 15;
-          writeText('https://iwaygh.github.io/WarKoBeng-Website', 0, 12, 'center');
+          writeText('Nongkrong Hemat Ala Gen Z', 0, 30, 'center');
 
           // Gambar QR Code
           if (img) {
             y += 10;
             const xQr = (width - qrSize) / 2; // Posisi tengah
             ctx.drawImage(img, xQr, y, qrSize, qrSize);
-          }
+          }//
 
           // === PROSES PRINT ===
           const dataUrl = canvas.toDataURL('image/png');
