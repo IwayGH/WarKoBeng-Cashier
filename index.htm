@@ -887,7 +887,6 @@
       // Default Menu Data (Merged from Script 1 structure into Script 2 flat array)
       const defaultMenuItems = [
         { id: 1, name: "Kopi WarKoBeng", category: "Kopi Espresso-Based", description: "Kopi", price: 17000, type: "drinks", image: null },
-        { id: 1, name: "Kopi WarKoBeng", category: "Kopi Espresso-Based", description: "Kopi", price: 17000, type: "drinks", image: null },
         { id: 2, name: "Hazelnut", category: "Kopi Espresso-Based", description: "Kopi", price: 17000, type: "drinks", image: null },
         { id: 3, name: "Caramel", category: "Kopi Espresso-Based", description: "Kopi", price: 17000, type: "drinks", image: null },
         { id: 4, name: "Vanilla Latte", category: "Kopi Espresso-Based", description: "Kopi", price: 17000, type: "drinks", image: null },
@@ -1162,102 +1161,118 @@
         const order = completedOrders.find(o => o.id === orderId);
         if (!order) return;
 
-      // === PENGATURAN QR CODE ===
-      // PERINGATAN: Ganti URL di bawah ini dengan Link Permanen Anda (misal: link Imgur/GitHub).
-        const qrWebsiteUrl = "https://github.com/IwayGH/WarKoBeng-Cashier/blob/main/qr-code%20web%20WarKoBeng.png";
+        // === PERBAIKAN 1: URL RAW GITHUB ===
+        // Link ini mengarah langsung ke file gambar, bukan halaman web.
+        const qrWebsiteUrl = "https://raw.githubusercontent.com/IwayGH/WarKoBeng-Cashier/main/qr-code%20web%20WarKoBeng.png";
 
         const qrImg = new Image();
-        qrImg.crossOrigin = "Anonymous"; // Diperlukan agar canvas bisa membaca gambar dari domain lain
+        qrImg.crossOrigin = "Anonymous"; // Penting agar canvas bisa membaca gambar dari GitHub
 
         qrImg.onload = function() {
-        generateAndPrint(qrImg);
-      };
+          generateAndPrint(qrImg);
+        };
 
         qrImg.onerror = function() {
-        console.error("Gagal memuat gambar QR, mencetak tanpa gambar...");
-        generateAndPrint(null); // Jika gagal, cetak tanpa gambar
-      };
+          console.error("Gagal memuat gambar QR, mencetak tanpa gambar...");
+          generateAndPrint(null); // Jika gagal, cetak tanpa gambar
+        };
 
         qrImg.src = qrWebsiteUrl;
 
-       function generateAndPrint(img) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const width = 320;
-        const padding = 20;
-        let y = 30;
+        function generateAndPrint(img) {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const width = 320;
+          const padding = 20;
+          let y = 30;
 
-       // Format angka
-        const formatNum = (num) => isNaN(num) ? "0" : Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+          // Format angka
+          const formatNum = (num) => isNaN(num) ? "0" : Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-       // Hitung tinggi canvas (tambahan ruang untuk QR jika gambar ada)
-        const qrSize = 100; // Ukuran QR Code
-        const extraHeight = img ? (qrSize + 60) : 0;
+          // Hitung tinggi canvas
+          const qrSize = 100; // Ukuran QR Code
+          // === PERBAIKAN 2: TAMBAHKAN extraHeight ===
+          const extraHeight = img ? (qrSize + 60) : 0;
 
-        
-        canvas.width = width;
-        canvas.height = 200 + (order.items.length * 55) + 180; // Dynamic height estimation
+          canvas.width = width;
+          // Tinggi kertas ditambah extraHeight agar muat QR
+          canvas.height = 200 + (order.items.length * 55) + 180 + extraHeight;
 
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#000000';
-        ctx.font = 'bold 24px "Courier New", monospace';
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#000000';
 
-        const writeText = (text, x, size, align, isBold) => {
-          ctx.font = `${isBold ? 'bold' : 'normal'} ${size}px "Courier New", monospace`;
-          ctx.textAlign = align;
-          let xPos = x;
-          if (align === 'center') xPos = width / 2;
-          else if (align === 'right') xPos = width - padding;
-          ctx.fillText(text, xPos, y);
-          y += size + 8;
-        };
+          const writeText = (text, x, size, align, isBold) => {
+            ctx.font = `${isBold ? 'bold' : 'normal'} ${size}px "Courier New", monospace`;
+            ctx.textAlign = align;
+            let xPos = x;
+            if (align === 'center') xPos = width / 2;
+            else if (align === 'right') xPos = width - padding;
+            ctx.fillText(text, xPos, y);
+            y += size + 8;
+          };
 
-        const drawLine = () => {
-          ctx.beginPath();
-          ctx.moveTo(padding, y - 5);
-          ctx.lineTo(width - padding, y - 5);
-          ctx.stroke();
+          const drawLine = () => {
+            ctx.beginPath();
+            ctx.moveTo(padding, y - 5);
+            ctx.lineTo(width - padding, y - 5);
+            ctx.stroke();
+            y += 10;
+          };
+
+          // Konten Struk Atas
+          writeText('WARKOBENG', 0, 28, 'center', false); // Judul Normal
+          writeText('Warung Kopi Bengkel', 0, 18, 'center', false);
+          y += 10; drawLine();
+
+          const parts = order.timestamp ? order.timestamp.split(', ') : [order.date, "--:--"];
+          writeText('Tanggal : ' + (parts[0] || order.date), padding, 16, 'left', false);
+          writeText('Waktu   : ' + (parts[1] || "--:--"), padding, 16, 'left', false);
+          writeText('Meja    : ' + order.table, padding, 16, 'left', false);
+          drawLine();
+
+          // Daftar Item
+          order.items.forEach(item => {
+            writeText(item.name, padding, 18, 'left', false); // Nama item Normal
+            ctx.font = '16px "Courier New", monospace';
+            const leftText = `  ${item.quantity} x Rp ${formatNum(item.price)}`;
+            const rightText = `Rp ${formatNum(item.price * item.quantity)}`;
+            ctx.textAlign = 'left'; ctx.fillText(leftText, padding, y);
+            ctx.textAlign = 'right'; ctx.fillText(rightText, width - padding, y);
+            y += 25;
+          });
+          drawLine();
+
+          // Total
+          ctx.font = '22px "Courier New", monospace';
+          ctx.textAlign = 'left'; ctx.fillText('TOTAL', padding, y);
+          ctx.textAlign = 'right'; ctx.fillText('Rp ' + formatNum(order.total), width - padding, y);
+          y += 35; drawLine();
+
           y += 10;
-        };
+          writeText(isPaid ? '== LUNAS ==' : 'MENUNGGU PEMBAYARAN', 0, 22, 'center', false);
+          y += 20;
+          writeText('Terima Kasih dan Selamat Menikmati', 0, 12, 'center', false);
 
-        writeText('WARKOBENG', 0, 28, 'center', false);
-        writeText('Warung Kopi Bengkel', 0, 18, 'center', false);
-        y += 10; drawLine();
+          // === PERBAIKAN 3: KODE UNTUK QR CODE ===
+          // Tambah URL Website
+          y += 15;
+          writeText('https://iwaygh.github.io/WarKoBeng-Website', 0, 12, 'center', false);
 
-        const parts = order.timestamp ? order.timestamp.split(', ') : [order.date, "--:--"];
-        writeText('Tanggal : ' + (parts[0] || order.date), padding, 16, 'left', false);
-        writeText('Waktu   : ' + (parts[1] || "--:--"), padding, 16, 'left', false);
-        writeText('Meja    : ' + order.table, padding, 16, 'left', false);
-        drawLine();
+          // Jika gambar berhasil dimuat, gambar QR Code
+          if (img) {
+            y += 10;
+            const xQr = (width - qrSize) / 2; // Posisi tengah
+            ctx.drawImage(img, xQr, y, qrSize, qrSize);
+          }
 
-        order.items.forEach(item => {
-          writeText(item.name, padding, 18, 'left', false);
-          ctx.font = '16px "Courier New", monospace';
-          const leftText = `  ${item.quantity} x Rp ${formatNum(item.price)}`;
-          const rightText = `Rp ${formatNum(item.price * item.quantity)}`;
-          ctx.textAlign = 'left'; ctx.fillText(leftText, padding, y);
-          ctx.textAlign = 'right'; ctx.fillText(rightText, width - padding, y);
-          y += 25;
-        });
-        drawLine();
+          // Proses Print Window
+          const dataUrl = canvas.toDataURL('image/png');
+          const printWindow = window.open('', '_blank');
+          if (!printWindow) { showToast("Popup blocked", "error"); return; }
 
-        ctx.font = '22px "Courier New", monospace';
-        ctx.textAlign = 'left'; ctx.fillText('TOTAL', padding, y);
-        ctx.textAlign = 'right'; ctx.fillText('Rp ' + formatNum(order.total), width - padding, y);
-        y += 35; drawLine();
-        
-        y += 10;
-        writeText(isPaid ? '== LUNAS ==' : 'MENUNGGU PEMBAYARAN', 0, 22, 'center', false);
-        y += 20;
-        writeText('Terima Kasih dan Selamat Menikmati', 0, 12, 'center', false);
-
-        const dataUrl = canvas.toDataURL('image/png');
-        const printWindow = window.open('', '_blank');
-        if (!printWindow) { showToast("Popup blocked", "error"); return; }
-        
-        printWindow.document.write(`<html><head><title>Struk</title><style>@media print { body { margin: 0; } img { width: 58mm; height: auto; } }</style></head><body><img src="${dataUrl}" /><script>setTimeout(function(){window.print();}, 500);<\/script></body></html>`);
-        printWindow.document.close();
+          printWindow.document.write(`<html><head><title>Struk</title><style>@media print { body { margin: 0; } img { width: 58mm; height: auto; } }</style></head><body><img src="${dataUrl}" /><script>setTimeout(function(){window.print();}, 500);<\/script></body></html>`);
+          printWindow.document.close();
       }
 
       function printReceipt(orderId) { printReceiptImage(orderId, true); }
