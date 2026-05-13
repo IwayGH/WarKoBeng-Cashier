@@ -1248,6 +1248,8 @@
           y += 15;
           writeText('Nongkrong Hemat Ala Gen Z', 0, 18, 'center');
 
+          // Proses Print
+          const dataUrl = canvas.toDataURL('image/png');
           const printWindow = window.open('', '_blank');
           if (!printWindow) { showToast("Popup blocked", "error"); return; }
 
