@@ -1177,7 +1177,7 @@
         ctx.font = 'bold 24px "Courier New", monospace';
 
         const writeText = (text, x, size, align, isBold) => {
-          ctx.font = `${size}px "Courier New", monospace`;
+          ctx.font = `${isBold ? 'bold' : 'normal'} ${size}px "Courier New", monospace`;
           ctx.textAlign = align;
           let xPos = x;
           if (align === 'center') xPos = width / 2;
@@ -1194,7 +1194,7 @@
           y += 10;
         };
 
-        writeText('WARKOBENG', 0, 28, 'center', true);
+        writeText('WARKOBENG', 0, 28, 'center', false);
         writeText('Warung Kopi Bengkel', 0, 18, 'center', false);
         y += 10; drawLine();
 
@@ -1205,7 +1205,7 @@
         drawLine();
 
         order.items.forEach(item => {
-          writeText(item.name, padding, 18, 'left', true);
+          writeText(item.name, padding, 18, 'left', false);
           ctx.font = '16px "Courier New", monospace';
           const leftText = `  ${item.quantity} x Rp ${formatNum(item.price)}`;
           const rightText = `Rp ${formatNum(item.price * item.quantity)}`;
@@ -1221,7 +1221,7 @@
         y += 35; drawLine();
         
         y += 10;
-        writeText(isPaid ? '== LUNAS ==' : 'MENUNGGU PEMBAYARAN', 0, 22, 'center', true);
+        writeText(isPaid ? '== LUNAS ==' : 'MENUNGGU PEMBAYARAN', 0, 22, 'center', false);
         y += 20;
         writeText('Terima Kasih Atas Kunjungan dan Selamat Menikmati', 0, 12, 'center', false);
 
